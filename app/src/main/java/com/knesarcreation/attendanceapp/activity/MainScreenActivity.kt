@@ -1,13 +1,13 @@
-package com.knesarcreation.attendanceapp
+package com.knesarcreation.attendanceapp.activity
 
-/*import com.knesarcreation.attendanceapp.fragment.AttendanceHistoryFragment
-import com.knesarcreation.attendanceapp.fragment.StudentInformationFragment*/
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.fragment.app.Fragment
+import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.fragment.AttendanceHistoryFragment
 import com.knesarcreation.attendanceapp.fragment.AttendanceSheetFragment
 import com.knesarcreation.attendanceapp.fragment.StudentInformationFragment
@@ -15,19 +15,32 @@ import kotlinx.android.synthetic.main.activity_main_screen.*
 
 
 class MainScreenActivity : AppCompatActivity() {
-    val END_SCALE = 0.7f
+    companion object {
+        const val END_SCALE = 0.7f
+    }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_screen)
 
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = ""
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        /*Open default fragment i.e., AttendanceSheetFragment*/
         fragmentTransaction(AttendanceSheetFragment())
 
         /* Setting click listener for menu items inside the navigation drawer*/
         navigationItemClickListener()
 
-        imgNavigateBtn.setOnClickListener {
-            mDrawerLayout.openDrawer(GravityCompat.START)
-        }
+        val actionBarDrawerToggle = ActionBarDrawerToggle(
+            this,
+            mDrawerLayout,
+            R.string.open_navigation_drawer,
+            R.string.close_navigation_drawer
+        )
+        actionBarDrawerToggle.syncState()
+        mDrawerLayout.addDrawerListener(actionBarDrawerToggle)
 
         animateNavigationDrawer()
         getSharedPreferences("SHARED_PREFS", 0).edit().putBoolean("Active", true).apply()
@@ -75,15 +88,22 @@ class MainScreenActivity : AppCompatActivity() {
                 contentView.translationX = xTranslation
             }
         })
-
     }
 
+    /*  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+          if (item.itemId == android.R.id.home) {
+              mDrawerLayout.openDrawer(GravityCompat.START)
+          }
+          return true
+      }*/
+
     override fun onBackPressed() {
+        val findFragmentById = supportFragmentManager.findFragmentById(R.id.fragment_container)
         when {
             mDrawerLayout.isDrawerVisible(GravityCompat.START) -> {
                 mDrawerLayout.closeDrawer(GravityCompat.START)
             }
-            supportFragmentManager.findFragmentById(R.id.fragment_container) !is AttendanceSheetFragment -> {
+            findFragmentById !is AttendanceSheetFragment -> {
                 fragmentTransaction(AttendanceSheetFragment())
             }
             else -> {

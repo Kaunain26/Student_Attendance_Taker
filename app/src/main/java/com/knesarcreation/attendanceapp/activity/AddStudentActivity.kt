@@ -1,9 +1,10 @@
-package com.knesarcreation.attendanceapp
+package com.knesarcreation.attendanceapp.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance
 import kotlinx.android.synthetic.main.activity_add_student.*

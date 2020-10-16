@@ -1,10 +1,11 @@
-package com.knesarcreation.attendanceapp
+package com.knesarcreation.attendanceapp.activity
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.adapter.AdapterStdPastAttendance
 import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance

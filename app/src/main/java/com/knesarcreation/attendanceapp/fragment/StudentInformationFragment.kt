@@ -12,7 +12,7 @@ import com.knesarcreation.attendanceapp.adapter.AdapterAttendanceSheet
 import com.knesarcreation.attendanceapp.database.AttendanceSheet
 import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance
-import kotlinx.android.synthetic.main.attendance_sheet.view.*
+import kotlinx.android.synthetic.main.fragment_attendance_sheet.view.*
 
 class StudentInformationFragment : Fragment() {
     var mAdapter: AdapterAttendanceSheet? = null
@@ -25,10 +25,10 @@ class StudentInformationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view: View = inflater.inflate(R.layout.attendance_sheet, container, false)
-        view.txtTitleNameAttendSheet.text = "Student Informations"
+        val view: View = inflater.inflate(R.layout.fragment_attendance_sheet, container, false)
+        view.txtTitleNameAttendSheet.text = "Student\nInformations"
         view.contentView.setBackgroundResource(
-            R.drawable.background_stud_information
+            R.drawable.attendance_sheet_background
         )
 
         view.hintMessageMainScreen.text = "Oops! No Info Found"
@@ -38,9 +38,6 @@ class StudentInformationFragment : Fragment() {
         view.mRecyclerView.setHasFixedSize(true)
 
         view.mRecyclerView.layoutManager = LinearLayoutManager(activity as Context)
-
-        view.btnHelp.visibility = View.INVISIBLE
-        view.btnCreateSheet.visibility = View.INVISIBLE
 
         gettingDataFromDatabase()
         buildRecyclerView(view)
@@ -54,7 +51,7 @@ class StudentInformationFragment : Fragment() {
     private fun buildRecyclerView(view: View) {
         mAdapter = AdapterAttendanceSheet(
             activity as Context,
-            false, clickedOn, mAttendanceList
+            false, clickedOn, mAttendanceList, fragmentManager
         )
         mAdapter?.notifyDataSetChanged()
         view.mRecyclerView.adapter = mAdapter

@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.database.StudentPastAttendance
-import kotlinx.android.synthetic.main.student_list.view.*
+import kotlinx.android.synthetic.main.recyler_student_single_row.view.*
 
 class AdapterStdPastAttendance(
     val context: Context,
@@ -32,7 +32,8 @@ class AdapterStdPastAttendance(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view: View =
-            LayoutInflater.from(parent.context).inflate(R.layout.student_list, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.recyler_student_single_row, parent, false)
         return MyViewHolder(view)
     }
 

@@ -6,26 +6,27 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.knesarcreation.attendanceapp.CreateAttendanceSheet
 import com.knesarcreation.attendanceapp.R
+import com.knesarcreation.attendanceapp.activity.CreateAttendanceSheet
 import com.knesarcreation.attendanceapp.adapter.AdapterAttendanceSheet
 import com.knesarcreation.attendanceapp.database.AttendanceHistory
 import com.knesarcreation.attendanceapp.database.AttendanceSheet
 import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
-import kotlinx.android.synthetic.main.attendance_sheet.view.*
+import kotlinx.android.synthetic.main.activity_main_screen.*
+import kotlinx.android.synthetic.main.fragment_attendance_sheet.view.*
 
 
 class AttendanceSheetFragment : Fragment() {
@@ -48,15 +49,18 @@ class AttendanceSheetFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view: View = inflater.inflate(R.layout.attendance_sheet, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_attendance_sheet, container, false)
 
         view.txtTitleNameAttendSheet.text = "Attendance Sheets"
         isActive = true
 
+        setHasOptionsMenu(true)
+
+        (activity as AppCompatActivity).toolbar.setBackgroundResource(R.drawable.attendance_sheet_background)
+
         /*Setting up database*/
         setDB()
 
-        callCreateAttendanceSheet(view)
 
         view.mRecyclerView.setHasFixedSize(true)
         view.mRecyclerView.layoutManager = LinearLayoutManager(activity as Context)
@@ -65,33 +69,6 @@ class AttendanceSheetFragment : Fragment() {
 
         buildRecyclerView(view)
 
-        /*Help button*/
-        view.btnHelp.setOnClickListener {
-            val builder = AlertDialog.Builder(activity as Context)
-            val dialogLayout: View = layoutInflater
-                .inflate(R.layout.help_dialog, null)
-            val imgView: ImageView =
-                dialogLayout.findViewById<View>(R.id.imgSwipe) as ImageView
-            val txtView = dialogLayout.findViewById<View>(R.id.txtRightSwipe) as TextView
-            val btnNext: Button = dialogLayout.findViewById<View>(R.id.btnNext) as Button
-            val btnGotIt: Button =
-                dialogLayout.findViewById<View>(R.id.btnGotIt) as Button
-
-            btnNext.visibility = View.VISIBLE
-            builder.setView(dialogLayout)
-            val dialog: AlertDialog = builder.create()
-
-            btnNext.setOnClickListener {
-
-                btnNext.visibility = View.INVISIBLE
-                btnGotIt.visibility = View.VISIBLE
-                imgView.setImageResource(R.drawable.swipe_left)
-                txtView.text = "Do Right Swipe To ' Edit ' Any Item"
-            }
-            btnGotIt.setOnClickListener { dialog.dismiss() }
-            dialog.setCancelable(false)
-            dialog.show()
-        }
         var deletedSheet: AttendanceSheet?
         ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
@@ -294,7 +271,8 @@ class AttendanceSheetFragment : Fragment() {
             activity as Context,
             isActive,
             clickedOn,
-            mAttendanceList
+            mAttendanceList,
+            fragmentManager
         )
         mAdapter.notifyDataSetChanged()
         view.mRecyclerView.adapter = mAdapter
@@ -307,13 +285,63 @@ class AttendanceSheetFragment : Fragment() {
         }
     }
 
-    private fun callCreateAttendanceSheet(view: View) {
-        view.btnCreateSheet.setOnClickListener {
-            startActivityForResult(
-                Intent(activity as Context, CreateAttendanceSheet::class.java),
-                REQUEST_CODE
-            )
+    /* private fun callCreateAttendanceSheet(view: View) {
+         view.btnCreateSheet.setOnClickListener {
+             startActivityForResult(
+                 Intent(activity as Context, CreateAttendanceSheet::class.java),
+                 REQUEST_CODE
+             )
+         }
+     }*/
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.attendance_sheet_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.ic_help -> {
+
+                val builder = AlertDialog.Builder(activity as Context)
+                val dialogLayout: View = layoutInflater
+                    .inflate(R.layout.help_dialog, null)
+                val imgView: ImageView =
+                    dialogLayout.findViewById<View>(R.id.imgSwipe) as ImageView
+                val txtView = dialogLayout.findViewById<View>(R.id.txtRightSwipe) as TextView
+                val btnNext: Button = dialogLayout.findViewById<View>(R.id.btnNext) as Button
+                val btnGotIt: Button =
+                    dialogLayout.findViewById<View>(R.id.btnGotIt) as Button
+
+                btnNext.visibility = View.VISIBLE
+                builder.setView(dialogLayout)
+                val dialog: AlertDialog = builder.create()
+
+                btnNext.setOnClickListener {
+
+                    btnNext.visibility = View.INVISIBLE
+                    btnGotIt.visibility = View.VISIBLE
+                    imgView.setImageResource(R.drawable.swipe_left)
+                    txtView.text = "Do Right Swipe To ' Edit ' Any Item"
+                }
+                btnGotIt.setOnClickListener { dialog.dismiss() }
+                dialog.setCancelable(false)
+                dialog.show()
+
+            }
+
+            R.id.ic_add -> {
+                startActivityForResult(
+                    Intent(activity as Context, CreateAttendanceSheet::class.java),
+                    REQUEST_CODE
+                )
+            }
+
+            android.R.id.home -> {
+                (activity as AppCompatActivity).mDrawerLayout.openDrawer(GravityCompat.START)
+            }
         }
+        return true
     }
 
     override fun onResume() {

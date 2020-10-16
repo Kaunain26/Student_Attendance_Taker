@@ -1,11 +1,11 @@
-package com.knesarcreation.attendanceapp
+package com.knesarcreation.attendanceapp.activity
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance
 import kotlinx.android.synthetic.main.activity_student_details.*

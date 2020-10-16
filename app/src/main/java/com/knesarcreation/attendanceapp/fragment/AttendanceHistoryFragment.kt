@@ -57,10 +57,12 @@ class AttendanceHistoryFragment : Fragment() {
                 attendanceSheet.subCode = list.subCode
             }
         }
-        mAdapter = AdapterAttendanceSheet(activity as Context,
+        mAdapter = AdapterAttendanceSheet(
+            activity as Context,
             isActive = false,
             clickedOn = false,
-            mAttendanceList = attendanceHistoryList
+            mAttendanceList = attendanceHistoryList,
+            fragmentManager
         )
 
         view.mRecyclerViewFragmentHistory.adapter = mAdapter

@@ -11,7 +11,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.knesarcreation.attendanceapp.R
-import com.knesarcreation.attendanceapp.StudentDetailsActivity
+import com.knesarcreation.attendanceapp.activity.StudentDetailsActivity
 import com.knesarcreation.attendanceapp.database.StudentListClass
 
 
@@ -48,7 +48,7 @@ class AdapterStudentList(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView: View =
-            LayoutInflater.from(context).inflate(R.layout.student_list, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.recyler_student_single_row, parent, false)
         return ViewHolder(itemView)
     }
 

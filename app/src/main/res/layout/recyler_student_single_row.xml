@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="5dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginRight="5dp"
-    app:cardBackgroundColor="#e2f3f4"
-    app:cardCornerRadius="5dp">
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginRight="10dp"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="8dp">
 
     <RelativeLayout
         android:id="@+id/rlStdPastAttendance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/card_background"
+        android:background="#fff"
         android:baselineAligned="false"
         android:foreground="?attr/selectableItemBackground"
         android:padding="5dp">
@@ -32,9 +32,9 @@
             android:id="@+id/txtStdUsn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_toRightOf="@+id/txtStudentName"
-            android:text="- 4KM18CS025"
+            android:layout_below="@id/txtStudentName"
+            android:layout_margin="5dp"
+            android:text="4KM18CS025"
             android:textSize="15sp"
             android:textStyle="normal" />
 

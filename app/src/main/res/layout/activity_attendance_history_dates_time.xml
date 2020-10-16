@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/attendance_history_background"
     android:orientation="vertical"
     android:padding="15dp">
@@ -42,7 +43,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/txtProfNameAttendDatesTimes"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            tools:listitem="@layout/recycler_history_date_time_single_row" />
     </RelativeLayout>
 
     <ImageView

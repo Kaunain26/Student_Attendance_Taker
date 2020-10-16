@@ -1,10 +1,11 @@
-package com.knesarcreation.attendanceapp
+package com.knesarcreation.attendanceapp.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.knesarcreation.attendanceapp.R
 import kotlinx.android.synthetic.main.activity_create_attendance_sheet.*
 
 class CreateAttendanceSheet : AppCompatActivity() {

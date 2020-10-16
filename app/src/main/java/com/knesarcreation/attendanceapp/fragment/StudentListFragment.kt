@@ -1,120 +1,127 @@
-package com.knesarcreation.attendanceapp
+package com.knesarcreation.attendanceapp.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.knesarcreation.attendanceapp.R
+import com.knesarcreation.attendanceapp.activity.AddStudentActivity
 import com.knesarcreation.attendanceapp.adapter.AdapterStudentList
 import com.knesarcreation.attendanceapp.database.*
+import kotlinx.android.synthetic.main.activity_main_screen.*
 import kotlinx.android.synthetic.main.activity_student_list.*
+import kotlinx.android.synthetic.main.activity_student_list.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
 
-class StudentListActivity : AppCompatActivity(), AdapterStudentList.OnItemClickListener {
-    var datesTime = ""
+    private var datesTime = ""
 
     /*isActive variable is used to check which fragment is open by there values TRUE or False*/
     private var isActive = false
 
     /*showAlertDialog is used to show AlertDialog Box when any checkbox is tried to check or uncheck*/
     private var showAlertDialog = false
-    var mAdapter: AdapterStudentList? = null
-    var mDatabase: Database? = null
+    private var mAdapter: AdapterStudentList? = null
+    private var mDatabase: Database? = null
     private var mListStd = mutableListOf<StudentListClass>()
     private var profName: String? = null
-    var sheetNo: Int? = 0
-    var subName: String? = null
+    private var sheetNo: Int? = 0
+    private var subName: String? = null
 
     companion object {
         const val REQUEST_CODE = 1
     }
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_student_list)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.activity_student_list, container, false)
 
+        subName = arguments?.getString("subName")
+        sheetNo = arguments?.getInt("sheetNo")
+        profName = arguments?.getString("profName")
+        isActive = arguments?.getBoolean("isActive")!!
 
-        sheetNo = intent?.getIntExtra("sheetNo", 0)
-        subName = intent?.getStringExtra("subName")
-        profName = intent?.getStringExtra("profName")
-        isActive = intent?.getBooleanExtra("isActive", false)!!
+        (activity as AppCompatActivity).toolbar.setBackgroundResource(R.drawable.student_list_backgound)
 
-        /*If StudentListActivity is opened from Attendance sheet fragment*/
+        view.txtSubNameStdList.text = subName
+
+        view.txtProfNameStdList.text = profName
+
         if (isActive) {
             /*Making views Visible which are required in StudentListActivity when opened from Attendance sheet fragment*/
-            imgSaveBtn.visibility = View.VISIBLE
-            btnAddStudent.visibility = View.VISIBLE
-            txtSelect.visibility = View.VISIBLE
-            checkAll.visibility = View.VISIBLE
-
-            txtSubNameStdList.text = subName
-
-            txtProfNameStdList.text = profName
-        } else {
-            /* if StudentListActivity is opened from StudentInformation fragment*/
-
-            /*Hiding views which are not required in StudentListActivity when opened from StudentInformation fragment*/
-            txtSubNameStdList.visibility = View.GONE
-            txtProfNameStdList.visibility = View.GONE
-
-            txtSubNameStd2ndList.visibility = View.VISIBLE
-            txtProfNameStd2ndList.visibility = View.VISIBLE
-            txtSubNameStd2ndList.text = subName
-            txtProfNameStd2ndList.text = profName
+            view.txtSelect.visibility = View.VISIBLE
+            view.checkAll.visibility = View.VISIBLE
+            setHasOptionsMenu(true)
         }
 
         setDB()
-        btnAddStudent.setOnClickListener {
-            startActivityForResult(
-                Intent(
-                    this,
-                    AddStudentActivity::class.java
-                ), REQUEST_CODE
-            )
-        }
-        gettingDataFromDatabase()
 
+        /*  view.btnAddStudent.setOnClickListener {
+              startActivityForResult(
+                  Intent(activity as Context, AddStudentActivity::class.java), REQUEST_CODE
+              )
+          }*/
 
-        stdRecyclerView.layoutManager = LinearLayoutManager(this)
+        gettingDataFromDatabase(view)
 
-        stdRecyclerView.itemAnimator = DefaultItemAnimator()
+        view.stdRecyclerView.layoutManager = LinearLayoutManager(activity as Context)
 
-        stdRecyclerView.isNestedScrollingEnabled = false
-        buildRecyclerView()
+        view.stdRecyclerView.itemAnimator = DefaultItemAnimator()
 
-        checkAll.setOnClickListener {
-            onCheckedChanged(checkAll.isChecked)
-        }
+        view.stdRecyclerView.isNestedScrollingEnabled = false
 
-        imgSaveBtn.setOnClickListener {
-            saveAttendance()
+        buildRecyclerView(view)
+
+        view.checkAll.setOnClickListener {
+            onCheckedChanged(checkAll.isChecked, view)
         }
 
-        imgBackBtnStdList.setOnClickListener {
-            backPressed()
-        }
+        /* view.imgSaveBtn.setOnClickListener {
+         }*/
+
+        /* view.imgBackBtnStdList.setOnClickListener {
+             backPressed()
+         }*/
 
         /*todo: Will implement  later*/
         swipeToDelete()
+
+        return view
     }
 
-    /* access modifiers changed from: private */
-    private fun gettingDataFromDatabase() {
+    private fun setDB() {
+        mDatabase = DatabaseInstance().newInstance(activity as Context)
+    }
+
+    private fun gettingDataFromDatabase(view: View) {
         for (list in mDatabase?.mDao()?.getAllStudents(sheetNo!!)!!) {
             mListStd = list.studentListClass
         }
         if (mListStd.isNotEmpty()) {
-            mHintRelativeLayout.visibility = View.INVISIBLE
+            view.mHintRelativeLayout.visibility = View.INVISIBLE
         }
     }
 
+    private fun buildRecyclerView(view: View) {
+        mAdapter = AdapterStudentList(activity as Context, isActive, this, mListStd)
+        mAdapter?.notifyDataSetChanged()
+        view.stdRecyclerView?.adapter = mAdapter
+    }
+
+
     private fun saveAttendance() {
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(activity as Context)
         builder.setTitle("Save Attendance" as CharSequence)
         builder.setMessage("Do you want to save changes to attendance?" as CharSequence)
         builder.setPositiveButton("Save") { _, _ ->
@@ -161,7 +168,9 @@ class StudentListActivity : AppCompatActivity(), AdapterStudentList.OnItemClickL
             for (k in mListStd) {
                 mDatabase?.mDao()?.updateStudentList(false, k.stdUsn)
             }
-            finish()
+
+            /*After saving attendance open AttendanceSheet Fragment*/
+            openFragment(AttendanceSheetFragment())
         }
 
         builder.setNegativeButton("Don't save") { dialog, _ ->
@@ -169,16 +178,6 @@ class StudentListActivity : AppCompatActivity(), AdapterStudentList.OnItemClickL
         }
         builder.setCancelable(false)
         builder.show()
-    }
-
-    private fun buildRecyclerView() {
-        mAdapter = AdapterStudentList(this, isActive, this, mListStd)
-        mAdapter?.notifyDataSetChanged()
-        stdRecyclerView.adapter = mAdapter
-    }
-
-    private fun setDB() {
-        mDatabase = DatabaseInstance().newInstance(this)
     }
 
     override fun onCheckBoxClicked(position: Int, viewHolder: AdapterStudentList.ViewHolder?) {
@@ -191,9 +190,10 @@ class StudentListActivity : AppCompatActivity(), AdapterStudentList.OnItemClickL
         }
     }
 
-    private fun onCheckedChanged(isChecked: Boolean) {
+
+    private fun onCheckedChanged(isChecked: Boolean, view: View) {
         mAdapter?.toggleSelection(isChecked)
-        txtSelect.text = if (isChecked) {
+        view.txtSelect.text = if (isChecked) {
             for (i in mListStd) {
                 mDatabase?.mDao()?.updateStudentList(true, i.stdUsn)
             }
@@ -208,37 +208,45 @@ class StudentListActivity : AppCompatActivity(), AdapterStudentList.OnItemClickL
 
     private fun backPressed() {
         if (mListStd.isEmpty()) {
-            super.onBackPressed()
+            activity?.finish()
             return
         }
-        if (isActive && showAlertDialog) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Alert!!")
-            builder.setMessage("Attendance isn't saved. Do you want to go back?")
-            builder.setPositiveButton("Yes") { _, _ ->
-                for (i in mListStd) {
-                    mDatabase?.mDao()?.updateStudentList(false, i.stdUsn)
+        if (isActive) {
+            if (showAlertDialog) {
+                /*If AttendanceSheet Fragment opens this Fragment*/
+                val builder = AlertDialog.Builder(activity as Context)
+                builder.setTitle("Alert!!")
+                builder.setMessage("Attendance isn't saved. Do you want to go back?")
+                builder.setPositiveButton("Yes") { _, _ ->
+                    for (i in mListStd) {
+                        mDatabase?.mDao()?.updateStudentList(false, i.stdUsn)
+                    }
+                    openFragment(AttendanceSheetFragment())
                 }
-                finish()
-            }
 
-            builder.setNegativeButton("No") { dialog, _ ->
-                dialog.dismiss()
-            }
+                builder.setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
 
-            builder.show()
+                builder.show()
+            } else {
+                openFragment(AttendanceSheetFragment())
+            }
         } else {
-            super.onBackPressed()
+            /*if StudentInformationFragment opens this Fragment*/
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, StudentInformationFragment())?.commit()
         }
     }
 
-    override fun onBackPressed() {
-        backPressed()
+    private fun openFragment(fragment: Fragment) {
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.fragment_container, fragment)?.commit()
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
 
             val stdName = data!!.getStringExtra("stdName")
             val stdUsn = data.getStringExtra("stdUsn")
@@ -273,9 +281,28 @@ class StudentListActivity : AppCompatActivity(), AdapterStudentList.OnItemClickL
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.student_list_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.ic_save -> {
+                saveAttendance()
+            }
+            R.id.ic_add -> {
+                startActivityForResult(
+                    Intent(activity as Context, AddStudentActivity::class.java), REQUEST_CODE
+                )
+            }
+        }
+        return true
+    }
+
     override fun onResume() {
-        gettingDataFromDatabase()
-        buildRecyclerView()
+        view?.let { it -> gettingDataFromDatabase(it) }
+        view?.let { it -> buildRecyclerView(it) }
         super.onResume()
     }
 
@@ -284,4 +311,5 @@ class StudentListActivity : AppCompatActivity(), AdapterStudentList.OnItemClickL
                `_$_findCachedViewById`(C0754R.C0757id.stdRecyclerView) as RecyclerView
            )*/
     }
+
 }

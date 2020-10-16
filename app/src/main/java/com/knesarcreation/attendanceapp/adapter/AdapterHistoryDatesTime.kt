@@ -1,7 +1,6 @@
 package com.knesar.attendanceapp.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.knesarcreation.attendanceapp.R
-import com.knesarcreation.attendanceapp.StudentsPastAttendance
 import com.knesarcreation.attendanceapp.database.AttendanceDateTimes
-import kotlinx.android.synthetic.main.attendance_history_date_time_list.view.*
+import kotlinx.android.synthetic.main.recycler_history_date_time_single_row.view.*
 
 
 class AdapterHistoryDatesTime(
@@ -34,7 +32,7 @@ class AdapterHistoryDatesTime(
         viewType: Int
     ): MyViewHolder {
         val view: View = LayoutInflater.from(context)
-            .inflate(R.layout.attendance_history_date_time_list, parent, false)
+            .inflate(R.layout.recycler_history_date_time_single_row, parent, false)
         return MyViewHolder(view)
     }
 

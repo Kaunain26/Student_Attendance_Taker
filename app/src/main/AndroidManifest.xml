@@ -9,36 +9,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainScreenActivity">
+        <activity android:name=".activity.MainScreenActivity">
 
         </activity>
         <activity
-            android:name=".CreateAttendanceSheet"
+            android:name=".activity.CreateAttendanceSheet"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <!-- <activity
+             android:name=".activity.StudentListActivity"
+             android:configChanges="orientation|screenSize"
+             android:screenOrientation="portrait" />-->
+        <activity
+            android:name=".activity.AddStudentActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".StudentListActivity"
+            android:name=".activity.StudentDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AddStudentActivity"
+            android:name=".activity.AttendanceDatesTimeActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".StudentDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".AttendanceDatesTimeActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".StudentsPastAttendance"
+            android:name=".activity.StudentsPastAttendance"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".activity.SplashScreenActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait">
             <intent-filter>
