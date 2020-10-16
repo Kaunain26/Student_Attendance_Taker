@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.activity_create_attendance_sheet.*
 
 class CreateAttendanceSheet : AppCompatActivity() {
     companion object {
-        const val EXTRA_CLASS = "com.knesarcreation.attendanceapp_EXTRA_CLASS"
+        const val EXTRA_CLASS_YEAR = "com.knesarcreation.attendanceapp_EXTRA_CLASS"
         const val EXTRA_PROF_NAME = "com.knesarcreationcreation.attendanceapp_EXTRA_PROF_NAME"
         const val EXTRA_SUB_CODE = "com.knesarcreation.attendanceapp_EXTRA_SUB_CODE"
         const val EXTRA_SUB_NAME = "com.knesarcreation.attendanceapp_EXTRA_SUB_NAME"
@@ -21,6 +21,9 @@ class CreateAttendanceSheet : AppCompatActivity() {
 
         if (intent.hasExtra(EXTRA_SUB_NAME)) {
             txtTitleNameCreateAttendSheet.text = "Edit Attendance Sheet"
+            etSubjectName.setText(intent?.getStringExtra(EXTRA_SUB_NAME))
+            etSubjectCode.setText(intent?.getStringExtra(EXTRA_SUB_CODE))
+            etLectureName.setText(intent?.getStringExtra(EXTRA_PROF_NAME))
         } else {
             txtTitleNameCreateAttendSheet.text = "Create Attendance Sheet"
         }
@@ -39,15 +42,15 @@ class CreateAttendanceSheet : AppCompatActivity() {
             val chooseYear = mSpinner.selectedItem.toString()
 
             if (profName.isNotBlank() && subName.isNotBlank()) {
-                val intent1 = Intent();
-                intent1.putExtra(EXTRA_PROF_NAME, profName);
-                intent1.putExtra(EXTRA_SUB_NAME, subName);
-                intent1.putExtra(EXTRA_SUB_CODE, subCode);
-                intent1.putExtra(EXTRA_CLASS, chooseYear);
-                setResult(-1, intent1);
-                finish();
+                val intent1 = Intent()
+                intent1.putExtra(EXTRA_PROF_NAME, profName)
+                intent1.putExtra(EXTRA_SUB_NAME, subName)
+                intent1.putExtra(EXTRA_SUB_CODE, subCode)
+                intent1.putExtra(EXTRA_CLASS_YEAR, chooseYear)
+                setResult(RESULT_OK, intent1)
+                finish()
             } else {
-                Toast.makeText(this, "Please fill the required field", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please fill the required field", Toast.LENGTH_SHORT).show()
             }
         }
         btnArrowBackCreateAttend.setOnClickListener {

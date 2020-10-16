@@ -9,8 +9,7 @@ import androidx.room.RoomDatabase
         StudentDetails::class,
         StudentListClass::class,
         AttendanceDateTimes::class,
-        AttendanceHistory::class,
-        TempStudentDetails::class],
+        AttendanceHistory::class],
     version = 1,
     exportSchema = false
 )

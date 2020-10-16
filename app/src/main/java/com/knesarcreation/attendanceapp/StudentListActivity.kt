@@ -248,9 +248,9 @@ class StudentListActivity : AppCompatActivity(), AdapterStudentList.OnItemClickL
             val stdAddress = data.getStringExtra("stdAddress")
             val totalStud = mListStd.size + 1
 
-            mDatabase?.mDao()?.updateTotalStudInAttendanceSheet(totalStud, subName)
+            mDatabase?.mDao()?.updateTotalStudInAttendanceSheet(subName!!, totalStud)
 
-            mDatabase?.mDao()?.updateTotalStudInAttendanceHistory(totalStud, subName)
+            mDatabase?.mDao()?.updateTotalStudInAttendanceHistory(subName!!, totalStud)
 
             val currentStudentDetails = StudentDetails(
                 stdId, sheetNo!!, stdUsn!!, stdName!!, stdAddress!!, stdContact!!, stdBranch!!,

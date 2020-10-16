@@ -1,7 +1,8 @@
 package com.knesarcreation.attendanceapp.database
 
-import androidx.room.*
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
 
 @Dao
 interface Dao {
@@ -23,27 +24,50 @@ interface Dao {
     @Insert
     fun insertStudentHistory(studentPastAttendance: StudentPastAttendance?)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTempStudentDetails(tempStudentDetails: TempStudentDetails)
 
-    @Delete
-    fun deleteTempStudentDetails(tempStudentDetails: TempStudentDetails)
+    @Query("DELETE FROM AttendanceSheet WHERE sheetNo =:sheetNo")
+    fun deleteAttendanceSheet(sheetNo: Int)
 
-    /* fun deleteAttendanceHistory(i: Int)
-     fun deleteAttendanceSheet(i: Int)
-     fun deleteHistoryAttendanceDateTimes(i: Int)
-     fun deleteStdDetailsWRTSheetNo(i: Int)
-     fun deleteStudentFromStdAttendHist(str: String?)
-     fun deleteStudentFromStdDetails(str: String?)
-     fun deleteStudentFromStdList(str: String?)*/
+    @Query("DELETE FROM AttendanceHistory WHERE hisID =:hisId")
+    fun deleteAttendanceHistory(hisId: Int)
 
-    /*  fun editAttendanceHistory(str: String?, str2: String?, str3: String?, str4: String?, i: Int)
-      fun editAttendanceSheet(str: String?, str2: String?, str3: String?, str4: String?, i: Int)*/
+    @Query("DELETE FROM AttendanceDateTimes WHERE attendHisId =:hisID")
+    fun deleteAttendanceHistoryDateTimes(hisID: Int)
+
+    @Query("DELETE FROM StudentDetails WHERE sheetNo = :sheetNo")
+    fun deleteStdDetails(sheetNo: Int)
+/*
+    @Query("DELETE FROM StudentPastAttendance")
+    fun deleteStudentFromStdPastAttendance(str: String?)
+
+    @Query("DELETE FROM StudentDetails")
+    fun deleteStudentFromStdDetails(str: String?)
+
+    @Query("DELETE FROM StudentListClass")
+    fun deleteStudentFromStdList(str: String?)*/
+
+    @Query("UPDATE AttendanceHistory SET  subName = :subName , subCode = :subCode ,  profName =:profName , classYear = :classYear WHERE hisID=:hisId ")
+    fun editAttendanceHistory(
+        subName: String?,
+        subCode: String?,
+        profName: String?,
+        classYear: String?,
+        hisId: Int
+    )
+
+    @Query("UPDATE AttendanceSheet SET subName = :subName , subCode = :subCode ,  profName =:profName , classYear = :classYear WHERE sheetNo=:sheetNo ")
+    fun editAttendanceSheet(
+        subName: String?,
+        subCode: String?,
+        profName: String?,
+        classYear: String?,
+        sheetNo: Int
+    )
 
     @Query("SELECT * FROM AttendanceSheet")
     fun getAllAttendanceSheets(): MutableList<AttendanceSheet>
 
-    @Query("SELECT * FROM AttendanceSheet WHERE id =:id")
+    @Query("SELECT * FROM AttendanceSheet WHERE sheetNo =:id")
     fun getAllStudents(id: Int): List<AttendanceSheetAndStudentList>
 
     @Query("SELECT * FROM StudentDetails WHERE studUsn =:stdUsn")
@@ -85,11 +109,11 @@ interface Dao {
     fun updateStudentPercentageStatus(percentage: Double, stdUsn: String)
 
 
-    @Query("UPDATE AttendanceHistory SET  totalStud =:totalStudent WHERE hisID = :id")
-    fun updateTotalStudInAttendanceHistory(id: Int, totalStudent: String?)
+    @Query("UPDATE AttendanceHistory SET  totalStud =:totalStudent WHERE subName = :subName")
+    fun updateTotalStudInAttendanceHistory(subName: String, totalStudent: Int)
 
-    @Query("UPDATE AttendanceSheet SET totalStud =:totalStudent WHERE id = :id")
-    fun updateTotalStudInAttendanceSheet(id: Int, totalStudent: String?)
+    @Query("UPDATE AttendanceSheet SET totalStud =:totalStudent WHERE subName = :subName")
+    fun updateTotalStudInAttendanceSheet(subName: String, totalStudent: Int)
 
 
     @Query("UPDATE StudentListClass SET isChecked =:isChecked WHERE stdUsn = :usn")

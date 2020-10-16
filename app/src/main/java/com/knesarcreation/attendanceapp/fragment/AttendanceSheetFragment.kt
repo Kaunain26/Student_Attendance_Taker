@@ -1,8 +1,10 @@
 package com.knesarcreation.attendanceapp.fragment
 
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +12,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.knesarcreation.attendanceapp.CreateAttendanceSheet
 import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.adapter.AdapterAttendanceSheet
@@ -19,15 +24,16 @@ import com.knesarcreation.attendanceapp.database.AttendanceHistory
 import com.knesarcreation.attendanceapp.database.AttendanceSheet
 import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.attendance_sheet.view.*
 
 
 class AttendanceSheetFragment : Fragment() {
 
-    var id1 = 0
+    var sheetNo = 0
     var isActive = true
-    val clickedOn = true
-    lateinit var mAdapter: AdapterAttendanceSheet
+    private val clickedOn = true
+    private lateinit var mAdapter: AdapterAttendanceSheet
     var mAttendanceList = mutableListOf<AttendanceSheet>()
     var mDatabase: Database? = null
 
@@ -82,36 +88,149 @@ class AttendanceSheetFragment : Fragment() {
                 imgView.setImageResource(R.drawable.swipe_left)
                 txtView.text = "Do Right Swipe To ' Edit ' Any Item"
             }
-            btnGotIt.setOnClickListener(View.OnClickListener { dialog.dismiss() })
+            btnGotIt.setOnClickListener { dialog.dismiss() }
             dialog.setCancelable(false)
             dialog.show()
         }
-        /*  ItemTouchHelper(
-              `AttendanceSheetFragment$onCreateView$2`(
-                  this,
-                  view,
-                  0,
-                  12
-              )
-          ).attachToRecyclerView(mRecyclerView)
-  */
+        var deletedSheet: AttendanceSheet?
+        ItemTouchHelper(object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                deletedSheet = mAttendanceList[position]
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        val builder = AlertDialog.Builder(activity as Context)
+                        builder.setTitle("Alert!!" as CharSequence)
+                        builder.setMessage("Your Current Attendance Sheet with Past Records Will be Deleted. Do You Want To Delete" as CharSequence)
+                        builder.setPositiveButton(
+                            "YES"
+                        ) { dialog, _ ->
+                            mDatabase?.mDao()
+                                ?.deleteAttendanceSheet(mAttendanceList[position].sheetNo)
+                            mDatabase?.mDao()
+                                ?.deleteAttendanceHistory(mAttendanceList[position].sheetNo)
+                            mDatabase?.mDao()?.deleteStdDetails(mAttendanceList[position].sheetNo)
+                            mDatabase?.mDao()
+                                ?.deleteAttendanceHistoryDateTimes(mAttendanceList[position].sheetNo)
+
+                            mAttendanceList.remove(deletedSheet)
+                            if (mAttendanceList.isEmpty()) {
+                                view.llNoAttendanceSheets.visibility = View.VISIBLE
+                            }
+                            mAdapter.notifyItemRemoved(position)
+                            dialog.dismiss()
+                        }
+                        builder.setNegativeButton(
+                            "NO"
+                        ) { dialog, _ ->
+                            mAdapter.notifyDataSetChanged()
+                            dialog.dismiss()
+                        }
+
+                        builder.setCancelable(false)
+                        builder.show()
+                    }
+
+                    ItemTouchHelper.RIGHT -> {
+                        sheetNo = mAttendanceList[position].sheetNo
+                        val intent =
+                            Intent(activity as Context, CreateAttendanceSheet::class.java)
+                        intent.putExtra(
+                            CreateAttendanceSheet.EXTRA_SUB_NAME,
+                            mAttendanceList[position].subName
+                        )
+                        intent.putExtra(
+                            CreateAttendanceSheet.EXTRA_PROF_NAME,
+                            mAttendanceList[position].profName
+                        )
+                        intent.putExtra(
+                            CreateAttendanceSheet.EXTRA_CLASS_YEAR,
+                            mAttendanceList[position].classYear
+                        )
+                        intent.putExtra(
+                            CreateAttendanceSheet.EXTRA_SUB_CODE,
+                            mAttendanceList[position].subCode
+                        )
+                        /*  val attendanceSheetFragment: AttendanceSheetFragment = this.`this$0`
+                          attendanceSheetFragment.f101id =
+                              Integer.valueOf((attendanceSheetFragment.mAttendanceList[position] as StudentsAttendanceSheet).getId())*/
+                        startActivityForResult(intent, EDIT_REQUEST_CODE)
+                    }
+                }
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val builder: RecyclerViewSwipeDecorator.Builder =
+                    RecyclerViewSwipeDecorator.Builder(
+                        context,
+                        c,
+                        recyclerView,
+                        viewHolder,
+                        dX,
+                        dY,
+                        actionState,
+                        isCurrentlyActive
+                    )
+                builder.addSwipeLeftBackgroundColor(
+                    ContextCompat.getColor(
+                        activity as Context,
+                        R.color.lightRed
+                    )
+                )
+                builder.addSwipeRightBackgroundColor(
+                    ContextCompat.getColor(
+                        activity as Context,
+                        R.color.lightYellow
+                    )
+                ).addSwipeRightLabel("Edit").setSwipeLeftLabelTextSize(1, 16.0f)
+                    .addSwipeLeftLabel("Delete").setSwipeLeftLabelTextSize(1, 16.0f).create()
+                    .decorate()
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+            }
+
+        }).attachToRecyclerView(view.mRecyclerView)
         return view
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 1 && resultCode == -1) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
 
             val profName = data!!.getStringExtra(CreateAttendanceSheet.EXTRA_PROF_NAME)
             val subName = data.getStringExtra(CreateAttendanceSheet.EXTRA_SUB_NAME)
             val subCode = data.getStringExtra(CreateAttendanceSheet.EXTRA_SUB_CODE)
-            val chooseYear = data.getStringExtra(CreateAttendanceSheet.EXTRA_CLASS)
+            val chooseYear = data.getStringExtra(CreateAttendanceSheet.EXTRA_CLASS_YEAR)
             val id = System.currentTimeMillis().toInt()
 
             val currentStdAttendanceSheet = AttendanceSheet(
                 id, subName!!, chooseYear!!,
-                "by $profName", 0
+                profName!!, 0
             )
 
             if (!subCode!!.isBlank()) {
@@ -124,7 +243,7 @@ class AttendanceSheetFragment : Fragment() {
                 id,
                 subName,
                 chooseYear,
-                "by $profName",
+                profName,
                 0,
             )
             if (subCode.isNotBlank()) {
@@ -139,32 +258,35 @@ class AttendanceSheetFragment : Fragment() {
             val adapterAttendanceSheet: AdapterAttendanceSheet? = mAdapter
 
             adapterAttendanceSheet?.notifyDataSetChanged()
-        } /*else if (requestCode == 2 && resultCode == -1) {
 
-            val profName2 = data!!.getStringExtra(CreateAttendanceSheet.EXTRA_PROF_NAME)
-            val subName2 = data.getStringExtra(CreateAttendanceSheet.EXTRA_SUB_NAME)
-            val subCode2 = data.getStringExtra(CreateAttendanceSheet.EXTRA_SUB_CODE)
-            val chooseYear2 = data.getStringExtra(CreateAttendanceSheet.EXTRA_CLASS)
-            val database3: Database? = mDatabase
+        } else if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
 
-            val mAttendanceDao: AttendanceDao = database3!!.mDao()
-
-            val num = id1
-
-            mAttendanceDao.editAttendanceSheet(profName2, subName2, subCode2, chooseYear2, num)
-            val database4: Database? = mDatabase
-
-            val mAttendanceDao2: AttendanceDao = database4!!.mDao()
-            val num2 = id1
-
-            mAttendanceDao2.editAttendanceHistory(profName2, subName2, subCode2, chooseYear2, num2)
+            var subjectCode = data?.getStringExtra(CreateAttendanceSheet.EXTRA_SUB_CODE)
+            if (subjectCode!!.isNotEmpty()) {
+                subjectCode = "($subjectCode)"
+            }
+            mDatabase?.mDao()?.editAttendanceSheet(
+                data!!.getStringExtra(CreateAttendanceSheet.EXTRA_SUB_NAME),
+                subjectCode,
+                data.getStringExtra(CreateAttendanceSheet.EXTRA_PROF_NAME),
+                data.getStringExtra(CreateAttendanceSheet.EXTRA_CLASS_YEAR),
+                sheetNo
+            )
+            mDatabase?.mDao()
+                ?.editAttendanceHistory(
+                    data!!.getStringExtra(CreateAttendanceSheet.EXTRA_SUB_NAME),
+                    subjectCode,
+                    data.getStringExtra(CreateAttendanceSheet.EXTRA_PROF_NAME),
+                    data.getStringExtra(CreateAttendanceSheet.EXTRA_CLASS_YEAR),
+                    sheetNo
+                )
 
             view?.let { gettingDataFromDatabase(it) }
 
             view?.let { buildRecyclerView(it) }
 
-            mAdapter?.notifyDataSetChanged()
-        }*/
+            mAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun buildRecyclerView(view: View) {

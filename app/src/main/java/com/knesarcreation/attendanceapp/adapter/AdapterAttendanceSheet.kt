@@ -1,5 +1,6 @@
 package com.knesarcreation.attendanceapp.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -39,9 +40,10 @@ class AdapterAttendanceSheet(
         return MyViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val attendanceSheetModel: AttendanceSheet = mAttendanceList[position]
-        holder.txtLecturerName.text = attendanceSheetModel.profName
+        holder.txtLecturerName.text = "by ${attendanceSheetModel.profName}"
         holder.txtClassYear.text = attendanceSheetModel.classYear
         holder.txtSubCode.text = attendanceSheetModel.subCode
         holder.txtSubjectName.text = attendanceSheetModel.subName
@@ -51,7 +53,7 @@ class AdapterAttendanceSheet(
             if (clickedOn) {
                 val studentListActivity =
                     Intent(context, StudentListActivity::class.java)
-                studentListActivity.putExtra("sheetNo", attendanceSheetModel.id)
+                studentListActivity.putExtra("sheetNo", attendanceSheetModel.sheetNo)
                 studentListActivity.putExtra("subName", attendanceSheetModel.subName)
                 studentListActivity.putExtra("profName", attendanceSheetModel.profName)
                 studentListActivity.putExtra("isActive", isActive)
@@ -59,7 +61,7 @@ class AdapterAttendanceSheet(
             } else {
                 val startAttendanceHistActivity =
                     Intent(context, AttendanceDatesTimeActivity::class.java)
-                startAttendanceHistActivity.putExtra("hisId", attendanceSheetModel.id)
+                startAttendanceHistActivity.putExtra("hisId", attendanceSheetModel.sheetNo)
                 startAttendanceHistActivity.putExtra("subName", attendanceSheetModel.subName)
                 startAttendanceHistActivity.putExtra("profName", attendanceSheetModel.profName)
                 context.startActivity(startAttendanceHistActivity)

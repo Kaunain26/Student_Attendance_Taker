@@ -2,7 +2,6 @@ package com.knesarcreation.attendanceapp.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +61,6 @@ class StudentInformationFragment : Fragment() {
     }
 
     private fun gettingDataFromDatabase() {
-        Log.d("stdInfo", "stdInfo:${mDatabase?.mDao()?.getAllAttendanceSheets()!!} ")
         mAttendanceList = mDatabase?.mDao()?.getAllAttendanceSheets()!!
     }
 

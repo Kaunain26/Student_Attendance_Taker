@@ -8,7 +8,7 @@ import androidx.room.Relation
 
 @Entity
 data class AttendanceSheet(
-    @PrimaryKey val id: Int,
+    @PrimaryKey val sheetNo: Int,
     val subName: String,
     val classYear: String,
     val profName: String,
@@ -29,7 +29,7 @@ data class StudentListClass(
 data class AttendanceSheetAndStudentList(
     @Embedded val attendanceSheet: AttendanceSheet,
     @Relation(
-        parentColumn = "id",
+        parentColumn = "sheetNo",
         entityColumn = "stdSrNo"
     )
     val studentListClass: MutableList<StudentListClass>
@@ -43,12 +43,7 @@ data class AttendanceHistory(
     val profName: String,
     val totalStud: Int
 ) {
-    //    val classYear: String = ""
-//    var hisID = 0
-
-    //    val id: Int = 0
     var subCode: String = ""
-
 }
 
 @Entity
@@ -72,7 +67,6 @@ data class StudentPastAttendance(
     @PrimaryKey val id: Int,
     val stdHistId: Int,
     var isChecked: Boolean = false,
-//    var stdHis: Int = 0,
     val stdName: String,
     var stdUsn: String? = null,
     val stdId: Int,
@@ -99,11 +93,4 @@ data class StudentDetails(
     val absent: Int = 0,
     var attendancePercentage: Float,
     val present: Int = 0
-)
-
-@Entity
-data class TempStudentDetails(
-    @PrimaryKey val position: Int,
-    val absent: Int,
-    val present: Int
 )
