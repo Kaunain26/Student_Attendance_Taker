@@ -10,6 +10,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.knesarcreation.attendanceapp.R
@@ -41,6 +42,8 @@ class AttendanceHistoryFragment : Fragment(), AdapterAttendanceSheet.OnItemClick
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_attnd_history, container, false)
 
+        (activity as AppCompatActivity).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+
         setDB()
         view.imgNavigateBtn.setOnClickListener {
             (activity as AppCompatActivity).mDrawerLayout.openDrawer(GravityCompat.START)
@@ -53,13 +56,13 @@ class AttendanceHistoryFragment : Fragment(), AdapterAttendanceSheet.OnItemClick
             view.hintMessageAttendHistory.visibility = View.INVISIBLE
         }
 
+        /*setting animation to views*/
         val slideFromRight = AnimationUtils.loadAnimation(
             activity as Context,
             R.anim.slide_from_right
         )
         val layoutRightSlide =
             AnimationUtils.loadAnimation(activity as Context, R.anim.layout_right_slide)
-
         view.txtTitleNameFragmentHistory.startAnimation(slideFromRight)
         view.mRecyclerViewFragmentHistory.startAnimation(layoutRightSlide)
 
@@ -100,16 +103,14 @@ class AttendanceHistoryFragment : Fragment(), AdapterAttendanceSheet.OnItemClick
     }
 
     override fun onClick(position: Int, viewHolder: AdapterAttendanceSheet.MyViewHolder) {
-        val attendDatesFragment = AttendDatesFragment()
-
         val fragment =
-            SharedTransition(activity as Context).sharedEnterAndExitTrans(attendDatesFragment)
-        val bundle = Bundle()
+            SharedTransition(activity as Context).sharedEnterAndExitTrans(AttendDatesFragment())
 
+        val bundle = Bundle()
         bundle.putInt("hisId", mStdHistoryList[position].hisID)
         bundle.putString("subName", mStdHistoryList[position].subName)
         bundle.putString("profName", mStdHistoryList[position].profName)
-        attendDatesFragment.arguments = bundle
+        fragment.arguments = bundle
 
         fragmentManager?.beginTransaction()
             ?.addSharedElement(imgHistoryBackground, "hist_background")

@@ -2,286 +2,370 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_stud_information"
+    android:background="@drawable/stud_details_background"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/btnArrowBackStdDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:foreground="?attr/selectableItemBackground"
-            android:padding="10dp"
+            android:padding="5dp"
             android:src="@drawable/arrow_back" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:fontFamily="@font/muli_extrabold"
-            android:includeFontPadding="false"
-            android:text="Student details"
-            android:textSize="23sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        android:padding="15dp">
 
         <TextView
             android:id="@+id/txtStudentNameStdDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:fontFamily="@font/muli_extrabold"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="60dp"
+            android:fontFamily="@font/trade_winds"
             android:includeFontPadding="false"
-            android:text="N/A"
-            android:textColor="#000"
-            android:textSize="22sp"
+            android:text="Kaunain nesar"
+            android:textColor="#fff"
+            android:textSize="26dp"
             android:textStyle="bold" />
 
         <LinearLayout
+            android:id="@+id/llPresentAbsent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_below="@id/txtStudentNameStdDetails"
+            android:layout_marginTop="15dp"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:padding="15dp"
+            android:weightSum="1">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:includeFontPadding="false"
-                android:text="Present Days: "
-                android:textColor="#2979ff"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
+            <!--  <TextView
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:includeFontPadding="false"
+                  android:text="Present Days: "
+                  android:textColor="#4D6156"
+                  android:textSize="17sp"
+                  android:textStyle="bold" />
+  -->
             <TextView
                 android:id="@+id/txtPresentStdDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
+                android:layout_weight="0.7"
                 android:includeFontPadding="false"
-                android:text="0"
+                android:text="Present Days: 0"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:includeFontPadding="false"
-                android:text="Absent Days: "
-                android:textColor="#fd1542"
-                android:textSize="17sp"
-                android:textStyle="bold" />
+            <!--  <TextView
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:includeFontPadding="false"
+                  android:text="Absent Days: "
+                  android:textColor="#C51162"
+                  android:textSize="17sp"
+                  android:textStyle="bold" />-->
 
             <TextView
                 android:id="@+id/txtAbsentStdDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
+                android:layout_weight="0.6"
                 android:includeFontPadding="false"
-                android:text="0"
+                android:text="Absent Days: 2"
                 android:textSize="17sp"
                 android:textStyle="bold" />
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/llAttendancePercentage"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
+            android:layout_below="@id/llPresentAbsent"
+            android:layout_centerHorizontal="true"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/txtHintStdPercentage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Attendance Percentage: "
-                android:textColor="@color/darkGreen"
-                android:textSize="17sp" />
+            <!--   <TextView
+                   android:id="@+id/txtHintStdPercentage"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Attendance Percentage: "
+                   android:textColor="#6A0633"
+                   android:textSize="17sp" />-->
 
             <TextView
                 android:id="@+id/txtStdPercentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text=" 0"
-                android:textStyle="bold"
-                android:textSize="15sp" />
+                android:text="Attendance Percentage: 0%"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text=" %"
-                android:textSize="15sp" />
+            <!--   <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text=" %"
+                   android:textSize="15sp" />-->
         </LinearLayout>
 
         <TextView
             android:id="@+id/stdPercentageMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_below="@id/llAttendancePercentage"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:textAlignment="center"
             android:textSize="10sp" />
 
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stdPercentageMessage"
+            android:layout_marginTop="30dp">
 
-            <TextView
-                android:id="@+id/txtHintUsn"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/btnBackHome"
+                android:layout_width="230dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:includeFontPadding="false"
-                android:text="USN"
-                android:textSize="15sp"
-                android:textStyle="normal" />
-
-            <TextView
-                android:id="@+id/txtStdUsnStudDetails"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtHintUsn"
-                android:layout_marginTop="10dp"
-                android:includeFontPadding="false"
-                android:text="N/A"
-                android:textSize="17sp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/stud_detials_button_background"
+                android:drawableLeft="@drawable/ic_colored_back"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="8dp"
+                android:text="Back to\nHome"
+                android:textAllCaps="false"
+                android:textColor="#fff"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/editStdUsn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="35dp"
-                android:padding="10dp"
-                android:src="@drawable/edit_icon" />
+            <RelativeLayout
+                android:id="@+id/rlStudDetailsCurvedBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/stud_details_bottom_curved_background"
+                android:orientation="vertical"
+                android:padding="30dp"
+                android:transitionName="main_screen">
+
+                <TextView
+                    android:id="@+id/txtStdDetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:text="Student Details"
+                    android:textColor="#000"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+
+
+                <RelativeLayout
+                    android:id="@+id/rlStdUsn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtStdDetails"
+                    android:layout_marginTop="20dp">
+
+                    <ImageView
+                        android:id="@+id/imgStdUsn"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/ic_stud_usn" />
+
+                    <TextView
+                        android:id="@+id/txtHintUsn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/imgStdUsn"
+                        android:includeFontPadding="false"
+                        android:text="USN"
+                        android:textColor="#000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtStdUsnStudDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtHintUsn"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@id/imgStdUsn"
+                        android:includeFontPadding="false"
+                        android:text="N/A"
+                        android:textSize="15sp"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/editStdUsn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:text="Edit" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlStdCourse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rlStdUsn"
+                    android:layout_marginTop="20dp">
+
+                    <ImageView
+                        android:id="@+id/imgStdCourse"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/ic_course" />
+
+                    <TextView
+                        android:id="@+id/txtHintCourse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/imgStdCourse"
+                        android:includeFontPadding="false"
+                        android:text="@string/course"
+                        android:textColor="#000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtStdCourseStudDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtHintCourse"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/imgStdCourse"
+                        android:includeFontPadding="false"
+                        android:text="N/A"
+                        android:textSize="15sp"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/editCourse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:text="Edit" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlStdContact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rlStdCourse"
+                    android:layout_marginTop="20dp">
+
+                    <ImageView
+                        android:id="@+id/imgStdContact"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_contact" />
+
+                    <TextView
+                        android:id="@+id/txtHintContact"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/imgStdContact"
+                        android:includeFontPadding="false"
+                        android:text="Contact Number"
+                        android:textColor="#000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtStdContactNoStudDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtHintContact"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/imgStdContact"
+                        android:includeFontPadding="false"
+                        android:text="N/A"
+                        android:textSize="15sp"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/editContactNo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:text="Edit" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlStdAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rlStdContact"
+                    android:layout_marginTop="20dp">
+
+                    <ImageView
+                        android:id="@+id/imgStdAddress"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_address" />
+
+                    <TextView
+                        android:id="@+id/txtHintAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/imgStdAddress"
+                        android:includeFontPadding="false"
+                        android:text="Address"
+                        android:textColor="#000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtStdAddressStudDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtHintAddress"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/imgStdAddress"
+                        android:includeFontPadding="false"
+                        android:text="N/A"
+                        android:textSize="15sp"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/editAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:text="Edit" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+
         </RelativeLayout>
+    </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/txtHintCourse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:includeFontPadding="false"
-                android:text="@string/course"
-                android:textSize="15sp"
-                android:textStyle="normal" />
-
-            <TextView
-                android:id="@+id/txtStdCourseStudDetails"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtHintCourse"
-                android:layout_marginTop="10dp"
-                android:includeFontPadding="false"
-                android:text="N/A"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/editCourse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="35dp"
-                android:padding="10dp"
-                android:src="@drawable/edit_icon" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/txtHintContact"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:includeFontPadding="false"
-                android:text="Contact Number"
-                android:textSize="15sp"
-                android:textStyle="normal" />
-
-            <TextView
-                android:id="@+id/txtStdContactNoStudDetails"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtHintContact"
-                android:layout_marginTop="10dp"
-                android:includeFontPadding="false"
-                android:text="N/A"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/editContactNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="35dp"
-                android:padding="10dp"
-                android:src="@drawable/edit_icon" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/txtHintAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:includeFontPadding="false"
-                android:text="Address"
-                android:textSize="15sp"
-                android:textStyle="normal" />
-
-            <TextView
-                android:id="@+id/txtStdAddressStudDetails"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtHintAddress"
-                android:layout_marginTop="10dp"
-                android:includeFontPadding="false"
-                android:text="N/A"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/editAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="35dp"
-                android:padding="10dp"
-                android:src="@drawable/edit_icon" />
-        </RelativeLayout>
-    </LinearLayout>
 </LinearLayout>

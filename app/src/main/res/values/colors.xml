@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#11698C</color>
     <color name="colorPrimaryDark">#11698C</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorAccent">#DF487F</color>
 
     <color name="lightYellow">#EDE273</color>
     <color name="lightBlue">#B2DEF3</color>
@@ -10,4 +10,5 @@
     <color name="darkGreen">#00897b</color>
     <color name="lightRed">#F46D63</color>
     <color name="lightSky">#11698C</color>
+    <color name="skinColor">#FF9E80</color>
 </resources>

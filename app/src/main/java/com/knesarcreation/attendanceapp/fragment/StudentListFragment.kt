@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,7 @@ import com.knesarcreation.attendanceapp.activity.AddStudentActivity
 import com.knesarcreation.attendanceapp.adapter.AdapterStudentList
 import com.knesarcreation.attendanceapp.database.*
 import com.knesarcreation.attendanceapp.util.SharedTransition
+import kotlinx.android.synthetic.main.activity_main_screen.*
 import kotlinx.android.synthetic.main.fragment_student_list.*
 import kotlinx.android.synthetic.main.fragment_student_list.view.*
 import java.text.SimpleDateFormat
@@ -50,7 +52,6 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
         var showAlertDialog = false
 
         var mListStd = mutableListOf<StudentListClass>()
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,19 +81,17 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
         profName = arguments?.getString("profName")
         isActive = arguments?.getBoolean("isActive")!!
 
+        /*setting entering transition for fragment*/
         sharedElementEnterTransition = TransitionInflater.from(activity as Context)
             .inflateTransition(R.transition.change_background_trans)
 
         view.txtSubNameStdList.text = subName
-        view.txtProfNameStdList.text = profName
+        view.txtProfNameStdList.text = "by $profName"
+
+        (activity as AppCompatActivity).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
         setDB()
         gettingDataFromDatabase(view)
-
-        val slideFromRight = AnimationUtils.loadAnimation(
-            activity as Context,
-            R.anim.slide_from_right
-        )
 
         if (isActive) {
             /*Making views Visible which are required in StudentListActivity when opened from Attendance sheet fragment*/
@@ -100,6 +99,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                 view.txtSelect.visibility = View.VISIBLE
                 view.checkAll.visibility = View.VISIBLE
             }
+            view.imgStudentListBackground.setBackgroundResource(R.drawable.dark_blue_backgound)
             view.imgAddStudents.visibility = View.VISIBLE
             view.imgSaveAttendance.visibility = View.VISIBLE
             setHasOptionsMenu(true)
@@ -111,6 +111,11 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
             )
         }
 
+        /*setting animation for views*/
+        val slideFromRight = AnimationUtils.loadAnimation(
+            activity as Context,
+            R.anim.slide_from_right
+        )
         val normalRightSlide =
             AnimationUtils.loadAnimation(activity as Context, R.anim.layout_right_slide)
         view.stdRecyclerView.startAnimation(slideFromRight)
@@ -134,7 +139,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
         }
 
         view.imgArrowBack.setOnClickListener {
-            backPressed()
+            arrowBackButton()
         }
 
         /*todo: Will implement  later*/
@@ -213,8 +218,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
             }
 
             /*After saving attendance open AttendanceSheet Fragment*/
-            openFragment(AttendanceSheetFragment())
-//            fragmentTransaction?.openMainFragment(AttendanceSheetFragment(), view)
+            openFragmentWithTransition(AttendanceSheetFragment())
         }
 
         builder.setNegativeButton("Don't save") { dialog, _ ->
@@ -251,7 +255,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
         }
     }
 
-    private fun backPressed() {
+    private fun arrowBackButton() {
         if (isActive) {
             if (showAlertDialog) {
                 /*If AttendanceSheet Fragment opens this Fragment*/
@@ -262,9 +266,8 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                     for (i in mListStd) {
                         mDatabase?.mDao()?.updateStudentList(false, i.stdUsn)
                     }
-//                    fragmentTransaction?.openMainFragment(AttendanceSheetFragment(), view)
                     showAlertDialog = false
-                    openFragment(AttendanceSheetFragment())
+                    openFragmentWithTransition(AttendanceSheetFragment())
                 }
 
                 builder.setNegativeButton("No") { dialog, _ ->
@@ -273,32 +276,16 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
 
                 builder.show()
             } else {
-                openFragment(AttendanceSheetFragment())
-//                fragmentTransaction?.openMainFragment(AttendanceSheetFragment(), view)
+                openFragmentWithTransition(AttendanceSheetFragment())
             }
         } else {
-            /*if StudentInformationFragment opens this Fragment*/
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_container, StudentInformationFragment())?.commit()
+            /*if StudentInformationFragment opens this StudentList Fragment
+            *  Go back with shared transition animation*/
+            openFragmentWithTransition(StudentInformationFragment())
         }
     }
 
-    private fun openFragment(fragment: Fragment) {
-        /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-             *//*setting a return transition and exit transition*//*
-            sharedElementReturnTransition = TransitionInflater.from(activity as Context)
-                .inflateTransition(R.transition.change_background_trans)
-            exitTransition = TransitionInflater.from(activity as Context)
-                .inflateTransition(android.R.transition.fade)
-
-            *//* setting a entering transition*//*
-            fragment.sharedElementEnterTransition =
-                TransitionInflater.from(activity as Context)
-                    .inflateTransition(R.transition.change_background_trans)
-            fragment.enterTransition = TransitionInflater.from(activity as Context)
-                .inflateTransition(android.R.transition.fade)
-        }*/
+    private fun openFragmentWithTransition(fragment: Fragment) {
         val replaceFragment = sharedTransition?.sharedEnterAndExitTrans(fragment)
         replaceFragment?.let {
             activity?.supportFragmentManager?.beginTransaction()

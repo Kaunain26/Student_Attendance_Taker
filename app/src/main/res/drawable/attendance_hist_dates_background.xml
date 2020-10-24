@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <color android:color="#466B88" />
-    </item>
-    <item android:left="250dp">
-        <color android:color="#fff" />
-    </item>
-</layer-list>

@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.knesarcreation.attendanceapp.R
@@ -17,6 +19,7 @@ import com.knesarcreation.attendanceapp.database.AttendanceDateTimes
 import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance
 import com.knesarcreation.attendanceapp.util.SharedTransition
+import kotlinx.android.synthetic.main.activity_main_screen.*
 import kotlinx.android.synthetic.main.fragment_attend_dates.*
 import kotlinx.android.synthetic.main.fragment_attend_dates.view.*
 
@@ -27,6 +30,7 @@ class AttendDatesFragment : Fragment() {
     private var mStdHistoryList = mutableListOf<AttendanceDateTimes>()
     private var profName: String? = ""
     private var subName: String? = ""
+    private var sharedTransition: SharedTransition? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,6 +47,8 @@ class AttendDatesFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_attend_dates, container, false)
 
+        sharedTransition = SharedTransition(activity as Context)
+
         setDB()
         if (arguments != null) {
             hisID = arguments?.getInt("hisId", 0)
@@ -51,12 +57,15 @@ class AttendDatesFragment : Fragment() {
         }
 
         view.txtTitleNameAttendDatesTimes.text = subName
-        view.txtProfNameAttendDatesTimes.text = profName
+        view.txtProfNameAttendDatesTimes.text = "by $profName"
 
+        (activity as AppCompatActivity).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
+        /*SharedElement Entering transition*/
         sharedElementEnterTransition = TransitionInflater.from(activity as Context)
             .inflateTransition(R.transition.change_background_trans)
 
+        /*setting animation to views*/
         val slideFromRight = AnimationUtils.loadAnimation(
             activity as Context,
             R.anim.slide_from_right
@@ -81,10 +90,16 @@ class AttendDatesFragment : Fragment() {
         }
         buildRecyclerView(view)
 
+        /*going back to HistoryFragment*/
         view.imgArrowBackHistoryDates.setOnClickListener {
-            fragmentManager?.beginTransaction()
-                ?.addSharedElement(imgHistDatesBackground, "hist_background")
-                ?.replace(R.id.fragment_container, AttendanceHistoryFragment())?.commit()
+            val replaceFragment =
+                sharedTransition?.sharedEnterAndExitTrans(AttendanceHistoryFragment())
+
+            replaceFragment?.let { it1 ->
+                fragmentManager?.beginTransaction()
+                    ?.addSharedElement(imgHistDatesBackground, "hist_background")
+                    ?.replace(R.id.fragment_container, it1)?.commit()
+            }
         }
         return view
     }
@@ -99,9 +114,10 @@ class AttendDatesFragment : Fragment() {
             object : AdapterHistoryDatesTime.OnItemClickListener {
                 override fun onItemClick(position: Int) {
 
-                    val fragment = SharedTransition(activity as Context).sharedEnterAndExitTrans(
-                        StudentPastAttendFragment()
-                    )
+                    val replaceFragment =
+                        sharedTransition?.sharedEnterAndExitTrans(
+                            StudentPastAttendFragment()
+                        )
                     val bundle = Bundle()
                     bundle.putInt("id", mStdHistoryList[position].id)
                     bundle.putString("dateTime", mStdHistoryList[position].dateTime)
@@ -109,13 +125,15 @@ class AttendDatesFragment : Fragment() {
                     bundle.putInt("hisId", hisID!!)
                     bundle.putString("profName", profName)
 
-                    fragment.arguments = bundle
-                    fragmentManager?.beginTransaction()?.addSharedElement(
-                        imgHistDatesBackground, "hist_background"
-                    )?.addSharedElement(imgArrowBackHistoryDates, "imgBack")
-                        ?.replace(R.id.fragment_container, fragment)?.commit()
-                }
+                    replaceFragment?.arguments = bundle
 
+                    replaceFragment?.let {
+                        fragmentManager?.beginTransaction()?.addSharedElement(
+                            imgHistDatesBackground, "hist_background"
+                        )?.addSharedElement(imgArrowBackHistoryDates, "imgBack")
+                            ?.replace(R.id.fragment_container, it)?.commit()
+                    }
+                }
             })
         view.mRecyclerViewAttendHistoryDatesTimes.adapter = mAdapter
     }

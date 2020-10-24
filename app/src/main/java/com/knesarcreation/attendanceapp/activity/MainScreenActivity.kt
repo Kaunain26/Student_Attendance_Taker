@@ -12,13 +12,13 @@ import androidx.fragment.app.Fragment
 import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance
-import com.knesarcreation.attendanceapp.fragment.AttendanceHistoryFragment
-import com.knesarcreation.attendanceapp.fragment.AttendanceSheetFragment
-import com.knesarcreation.attendanceapp.fragment.StudentInformationFragment
-import com.knesarcreation.attendanceapp.fragment.StudentListFragment
+import com.knesarcreation.attendanceapp.fragment.*
 import com.knesarcreation.attendanceapp.util.SharedTransition
 import kotlinx.android.synthetic.main.activity_main_screen.*
+import kotlinx.android.synthetic.main.fragment_attend_dates.*
 import kotlinx.android.synthetic.main.fragment_student_list.*
+import kotlinx.android.synthetic.main.fragment_student_list.imgArrowBack
+import kotlinx.android.synthetic.main.fragment_student_past_attend.*
 
 
 class MainScreenActivity : AppCompatActivity() {
@@ -94,16 +94,15 @@ class MainScreenActivity : AppCompatActivity() {
             mDrawerLayout.isDrawerVisible(GravityCompat.START) -> {
                 mDrawerLayout.closeDrawer(GravityCompat.START)
             }
-            /*  findFragmentById !is AttendanceSheetFragment -> {
-                  fragmentTransaction(AttendanceSheetFragment())
-              }*/
+
             findFragmentById is StudentListFragment -> {
                 mDatabase = DatabaseInstance().newInstance(this)
 
+                /*If AttendanceSheetFragment opens StudentListFragment*/
                 if (StudentListFragment.isActive) {
-                    if (StudentListFragment.showAlertDialog) {
 
-                        /*If AttendanceSheet Fragment opens this Fragment*/
+                    if (StudentListFragment.showAlertDialog) {
+                        /*If AttendanceSheet Fragment opens StudentListFragment*/
                         val builder = AlertDialog.Builder(this)
                         builder.setTitle("Alert!!")
                         builder.setMessage("Attendance isn't saved. Do you want to go back?")
@@ -117,16 +116,8 @@ class MainScreenActivity : AppCompatActivity() {
                                 SharedTransition(this).sharedEnterAndExitTrans(
                                     AttendanceSheetFragment()
                                 )
-                            supportFragmentManager.beginTransaction()
-                                .addSharedElement(imgStudentListBackground, "background")
-                                .addSharedElement(imgAddStudents, "imgAddIcon")
-                                .addSharedElement(imgSaveAttendance, "imgSaveAndHelp")
-                                .addSharedElement(imgArrowBack, "imgArrowBack")
-                                .replace(R.id.fragment_container, fragment)
-                                .commit()
-                            /*  StudentListFragment.fragmentTransaction?.openMainFragment(
-                                  AttendanceSheetFragment(), StudentListFragment.rootView
-                              )*/
+                            /*open AttendanceHistoryFragment with transition*/
+                            openFragmentWithTransition(fragment)
                         }
 
                         builder.setNegativeButton("No") { dialog, _ ->
@@ -134,31 +125,79 @@ class MainScreenActivity : AppCompatActivity() {
                         }
                         builder.show()
                     } else {
-                        /* StudentListFragment.fragmentTransaction?.openMainFragment(
-                             AttendanceSheetFragment(), StudentListFragment.rootView
-                         )*/
+
                         val fragment =
                             SharedTransition(this).sharedEnterAndExitTrans(
                                 AttendanceSheetFragment()
                             )
-                        supportFragmentManager.beginTransaction()
-                            .addSharedElement(imgStudentListBackground, "background")
-                            .addSharedElement(imgAddStudents, "imgAddIcon")
-                            .addSharedElement(imgSaveAttendance, "imgSaveAndHelp")
-                            .addSharedElement(imgArrowBack, "imgArrowBack")
-                            .replace(R.id.fragment_container, fragment)
-                            .commit()
-
+                        /*open AttendanceHistoryFragment with transition*/
+                        openFragmentWithTransition(fragment)
                     }
                 } else {
-                    /*if StudentInformationFragment opens this Fragment*/
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, StudentInformationFragment()).commit()
+                    /*if StudentInformationFragment opens StudentListFragment*/
+
+                    val fragment =
+                        SharedTransition(this).sharedEnterAndExitTrans(
+                            StudentInformationFragment()
+                        )
+                    /*open StudentInformation fragment with transition*/
+                    openFragmentWithTransition(fragment)
                 }
+            }
+
+            findFragmentById is AttendDatesFragment -> {
+
+                /*open AttendanceHistoryFragment with transition*/
+                val replaceFragment =
+                    SharedTransition(this).sharedEnterAndExitTrans(AttendanceHistoryFragment())
+
+                supportFragmentManager.beginTransaction()
+                    .addSharedElement(imgHistDatesBackground, "hist_background")
+                    .replace(R.id.fragment_container, replaceFragment).commit()
+
+            }
+
+            findFragmentById is StudentPastAttendFragment -> {
+                /*open AttendanceDatesFragment with transition*/
+                openAttendanceDatesFragment()
+            }
+
+            findFragmentById !is AttendanceSheetFragment -> {
+                fragmentTransaction(AttendanceSheetFragment())
             }
             else -> {
                 super.onBackPressed()
             }
         }
+    }
+
+    private fun openFragmentWithTransition(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .addSharedElement(imgStudentListBackground, "background")
+            .addSharedElement(imgAddStudents, "imgAddIcon")
+            .addSharedElement(imgSaveAttendance, "imgSaveAndHelp")
+            .addSharedElement(imgArrowBack, "imgArrowBack")
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
+
+    private fun openAttendanceDatesFragment() {
+        val replaceFragment =
+            SharedTransition(this).sharedEnterAndExitTrans(AttendDatesFragment())
+        val bundle = Bundle()
+        bundle.putString(
+            "profName",
+            StudentPastAttendFragment().arguments?.getString("profName")
+        )
+        bundle.putString("profName", StudentPastAttendFragment.profName)
+        bundle.putInt("hisId", StudentPastAttendFragment.hisId)
+        bundle.putString("subName", StudentPastAttendFragment.subName)
+        replaceFragment.arguments = bundle
+
+        supportFragmentManager.beginTransaction()
+            .addSharedElement(imgStdPastAttendBackground, "hist_background")
+            .addSharedElement(imgArrowBack, "imgBack")
+            .replace(R.id.fragment_container, replaceFragment)
+            .commit()
     }
 }

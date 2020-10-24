@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.activity.StudentDetailsActivity
@@ -24,7 +24,6 @@ class AdapterStudentList(
     RecyclerView.Adapter<AdapterStudentList.ViewHolder>() {
 
     interface OnItemClickListener {
-        //        fun onContentLayoutClick(i: Int)
         fun onCheckBoxClicked(position: Int, viewHolder: ViewHolder?)
     }
 
@@ -40,7 +39,7 @@ class AdapterStudentList(
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var checkbox: CheckBox = view.findViewById(R.id.mCheckBox)
         var contentLayout: RelativeLayout = view.findViewById(R.id.rlStdPastAttendance)
-        var imgArrowNext: ImageView = view.findViewById(R.id.imgArrowNext)
+        var arrowNext: CardView = view.findViewById(R.id.arrowNext)
         var stdName: TextView = view.findViewById(R.id.txtStudentName)
         var stdUsn: TextView = view.findViewById(R.id.txtStdUsn)
     }
@@ -71,7 +70,7 @@ class AdapterStudentList(
 
         } else {
             holder.checkbox.visibility = View.INVISIBLE
-            holder.imgArrowNext.visibility = View.VISIBLE
+            holder.arrowNext.visibility = View.VISIBLE
             holder.stdName.text = lstStudent[position].stdName
             holder.stdUsn.text = lstStudent[position].stdUsn
             holder.contentLayout.setOnClickListener {

@@ -1,39 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="15dp"
     android:layout_marginTop="15dp"
     android:layout_marginRight="15dp"
-    app:cardElevation="8dp"
-    app:cardCornerRadius="5dp">
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="8dp">
 
     <RelativeLayout
         android:id="@+id/mRelativeLayoutAttendHistory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
-        android:baselineAligned="false"
         android:foreground="?attr/selectableItemBackground"
-        android:padding="5dp">
+        tools:targetApi="m">
 
         <TextView
             android:id="@+id/txtDateTimeList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="20dp"
+            android:fontFamily="serif-monospace"
             android:text="Thursday,19 Oct 9:20 AM"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textSize="18sp"
-            android:textStyle="normal" />
+            android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/imgArrowNext"
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:padding="5dp"
-            android:src="@drawable/arrow_next" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="8dp"
+            android:visibility="visible"
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp"
+            app:cardUseCompatPadding="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:src="@drawable/arrow_next" />
+        </androidx.cardview.widget.CardView>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

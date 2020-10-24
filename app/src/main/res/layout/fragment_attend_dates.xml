@@ -11,9 +11,9 @@
 
         <ImageView
             android:id="@+id/imgHistDatesBackground"
-            android:layout_width="match_parent"
+            android:layout_width="255dp"
             android:layout_height="match_parent"
-            android:background="@drawable/attendance_hist_dates_background" />
+            android:background="@drawable/attendance_history_background" />
 
         <ImageView
             android:id="@+id/imgArrowBackHistoryDates"
@@ -30,10 +30,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/imgArrowBackHistoryDates"
             android:layout_marginLeft="10dp"
-            android:fontFamily="@font/muli_extrabold"
+            android:fontFamily="@font/paytone_one"
             android:text="Basics of Kotlin"
             android:textColor="#fff"
-            android:textSize="23sp" />
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtProfNameAttendDatesTimes"
@@ -41,20 +42,22 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtTitleNameAttendDatesTimes"
             android:layout_marginLeft="13dp"
-            android:fontFamily="@font/muli_extrabold"
+            android:fontFamily="serif-monospace"
             android:text="by Arvinda"
             android:textColor="#fff"
-            android:textSize="10sp" />
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mRecyclerViewAttendHistoryDatesTimes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/txtProfNameAttendDatesTimes"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:layoutAnimation="@anim/layout_animation_slide_from_right"
             tools:listitem="@layout/recycler_history_date_time_single_row" />
     </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/rlNoHistoryAttend"
@@ -64,9 +67,8 @@
 
         <ImageView
             android:id="@+id/imgNoRecordsHistDatesTime"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:layout_centerInParent="true"
             android:src="@drawable/icon_no_records" />
 
         <TextView
@@ -74,22 +76,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/imgNoRecordsHistDatesTime"
-            android:layout_marginTop="60dp"
+            android:layout_marginLeft="90dp"
             android:fontFamily="@font/alegreya_sans"
-            android:text="No History Records Found To Display Here"
+            android:labelFor="@id/imgNoRecordsHistDatesTime"
+            android:text="Oops Nothing Found"
             android:textAlignment="center"
-            android:textSize="17sp" />
+            android:textColor="#FFB60B"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/hintSmallMessageHistDatesTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/hintMessageHistDatesTime"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/alegreya_sans"
-            android:text="Take Attendance To Display History"
+            android:text="Take Attendance To\nDisplay History"
             android:textAlignment="center"
-            android:textSize="13sp" />
+            android:textColor="#fff"
+            android:textSize="15sp" />
     </RelativeLayout>
 </RelativeLayout>

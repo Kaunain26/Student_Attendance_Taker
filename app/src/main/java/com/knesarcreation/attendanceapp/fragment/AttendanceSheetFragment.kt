@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +32,7 @@ import com.knesarcreation.attendanceapp.database.AttendanceHistory
 import com.knesarcreation.attendanceapp.database.AttendanceSheet
 import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance
+import com.knesarcreation.attendanceapp.util.SharedTransition
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_main_screen.*
 import kotlinx.android.synthetic.main.fragment_attendance_sheet.*
@@ -60,9 +62,12 @@ class AttendanceSheetFragment : Fragment(), AdapterAttendanceSheet.OnItemClickLi
 
         val view: View = inflater.inflate(R.layout.fragment_attendance_sheet, container, false)
 
+        (activity as AppCompatActivity).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+
         view.txtTitleNameAttendSheet.text = "Attendance Sheets"
         isActive = true
 
+        /*SharedElement Entering transition*/
         sharedElementEnterTransition = TransitionInflater.from(activity as Context)
             .inflateTransition(R.transition.change_background_trans)
 
@@ -173,9 +178,6 @@ class AttendanceSheetFragment : Fragment(), AdapterAttendanceSheet.OnItemClickLi
                             CreateAttendanceSheet.EXTRA_SUB_CODE,
                             mAttendanceList[position].subCode
                         )
-                        /*  val attendanceSheetFragment: AttendanceSheetFragment = this.`this$0`
-                          attendanceSheetFragment.f101id =
-                              Integer.valueOf((attendanceSheetFragment.mAttendanceList[position] as StudentsAttendanceSheet).getId())*/
                         startActivityForResult(intent, EDIT_REQUEST_CODE)
                     }
                 }
@@ -305,7 +307,6 @@ class AttendanceSheetFragment : Fragment(), AdapterAttendanceSheet.OnItemClickLi
     private fun buildRecyclerView(view: View) {
         mAdapter = AdapterAttendanceSheet(
             activity as Context,
-            /* isActive, *//*isActive = true*/
             this,
             mAttendanceList,
             fragmentManager
@@ -380,23 +381,8 @@ class AttendanceSheetFragment : Fragment(), AdapterAttendanceSheet.OnItemClickLi
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onClick(position: Int, viewHolder: AdapterAttendanceSheet.MyViewHolder) {
 
-        val studentListFragment = StudentListFragment()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            /*setting a return transition and exit transition*/
-            sharedElementReturnTransition = TransitionInflater.from(activity as Context)
-                .inflateTransition(R.transition.change_background_trans)
-            exitTransition = TransitionInflater.from(activity as Context)
-                .inflateTransition(android.R.transition.fade)
-
-            /* setting a entering transition*/
-            studentListFragment.sharedElementEnterTransition =
-                TransitionInflater.from(activity as Context)
-                    .inflateTransition(R.transition.change_background_trans)
-            studentListFragment.enterTransition = TransitionInflater.from(activity as Context)
-                .inflateTransition(android.R.transition.fade)
-        }
+        val studentListFragment =
+            SharedTransition(activity as Context).sharedEnterAndExitTrans(StudentListFragment())
 
         val bundle = Bundle()
         bundle.putInt("sheetNo", mAttendanceList[position].sheetNo)

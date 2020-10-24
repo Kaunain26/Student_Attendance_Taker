@@ -4,18 +4,17 @@
     android:id="@+id/studentListRecyclerRowItems"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:layout_marginTop="15dp"
-    android:layout_marginRight="10dp"
-    app:cardCornerRadius="5dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="15dp"
     app:cardElevation="8dp">
 
     <RelativeLayout
         android:id="@+id/rlStdPastAttendance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
-        android:baselineAligned="false"
         android:foreground="?attr/selectableItemBackground"
         android:padding="5dp">
 
@@ -23,9 +22,14 @@
             android:id="@+id/txtStudentName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/muli_extrabold"
             android:text="Kaunain Nesar"
             android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/darkGreen"
             android:textSize="18sp"
             android:textStyle="normal" />
 
@@ -34,10 +38,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txtStudentName"
-            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="serif-monospace"
             android:text="4KM18CS025"
             android:textSize="15sp"
-            android:textStyle="normal" />
+            android:textStyle="bold" />
 
         <CheckBox
             android:id="@+id/mCheckBox"
@@ -47,14 +55,25 @@
             android:layout_centerVertical="true"
             android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/imgArrowNext"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/arrowNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:padding="5dp"
-            android:src="@drawable/arrow_next"
-            android:visibility="gone" />
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:src="@drawable/arrow_next" />
+        </androidx.cardview.widget.CardView>
+
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

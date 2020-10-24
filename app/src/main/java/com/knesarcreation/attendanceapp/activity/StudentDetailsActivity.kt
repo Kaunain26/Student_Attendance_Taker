@@ -1,10 +1,13 @@
 package com.knesarcreation.attendanceapp.activity
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance
@@ -31,10 +34,14 @@ class StudentDetailsActivity : AppCompatActivity() {
         for (i in mDatabase?.mDao()?.getStudentDetails(stdUsn!!)!!) {
             id = i.id
 
+
             try {
+                /**calculating percentage*/
                 attendancePercentage = ((i.present.toDouble() / (i.present + i.absent)) * 100)
                 stdPercentage = String.format("%.3f", attendancePercentage, 1)
                 if (i.absent == 0) {
+
+                    /**updating percentage*/
                     mDatabase?.mDao()?.updateStudentPercentageStatus(0.0, i.studUsn)
                 } else {
                     mDatabase?.mDao()
@@ -49,7 +56,7 @@ class StudentDetailsActivity : AppCompatActivity() {
                         stdPercentageMessage.text =
                             "Your attendance percentage is less \nIt should be above 85%"
                     }
-                    txtStdPercentage.text = stdPercentage
+                    txtStdPercentage.text = "Attendance Percentage: $stdPercentage%"
                     isExecuted = true
 
                 }
@@ -60,8 +67,8 @@ class StudentDetailsActivity : AppCompatActivity() {
             txtStudentNameStdDetails.text = i.studName
             txtStdUsnStudDetails.text = i.studUsn
 
-            txtPresentStdDetails.text = i.present.toString()
-            txtAbsentStdDetails.text = i.absent.toString()
+            txtPresentStdDetails.text = "Present Days: ${i.present}"
+            txtAbsentStdDetails.text = "Absent Days: ${i.absent}"
 
             if (i.studCourse.isBlank()) {
                 txtStdCourseStudDetails.text = "N/A"
@@ -79,6 +86,26 @@ class StudentDetailsActivity : AppCompatActivity() {
                 txtStdContactNoStudDetails.text = i.studContact
             }
         }
+
+        /*Going back to home Page*/
+        btnBackHome.setOnClickListener {
+            val intent = Intent(this, MainScreenActivity::class.java)
+            startActivity(intent)
+            ActivityCompat.finishAffinity(this)
+        }
+
+        /*setting up animation to views*/
+        val slideFromDown = AnimationUtils.loadAnimation(this, R.anim.slide_from_down)
+        val slideFromRight = AnimationUtils.loadAnimation(this, R.anim.slide_from_right)
+        val fade = AnimationUtils.loadAnimation(this, R.anim.fade)
+        rlStudDetailsCurvedBackground.startAnimation(slideFromDown)
+        btnBackHome.startAnimation(slideFromRight)
+        txtStudentNameStdDetails.startAnimation(fade)
+        txtPresentStdDetails.startAnimation(fade)
+        txtAbsentStdDetails.startAnimation(fade)
+        txtStdPercentage.startAnimation(fade)
+
+
         editingStudentDetails()
         btnArrowBackStdDetails.setOnClickListener {
             super.onBackPressed()

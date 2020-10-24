@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.knesarcreation.attendanceapp.R
@@ -17,12 +19,12 @@ import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance
 import com.knesarcreation.attendanceapp.database.StudentPastAttendance
 import com.knesarcreation.attendanceapp.util.SharedTransition
+import kotlinx.android.synthetic.main.activity_main_screen.*
 import kotlinx.android.synthetic.main.fragment_student_past_attend.*
 import kotlinx.android.synthetic.main.fragment_student_past_attend.view.*
 
 class StudentPastAttendFragment : Fragment(), AdapterStdPastAttendance.OnItemClickListener {
     private var id: Int? = 0
-    private var subName: String? = ""
     private var showAlertDialog: Boolean = false
     private var mAdapter: AdapterStdPastAttendance? = null
     private var mDatabase: Database? = null
@@ -39,6 +41,12 @@ class StudentPastAttendFragment : Fragment(), AdapterStdPastAttendance.OnItemCli
         ViewCompat.setTransitionName(imgBack, "imgBack")
     }
 
+    companion object {
+        var hisId = 0
+        var profName = ""
+        var subName: String? = ""
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,15 +55,19 @@ class StudentPastAttendFragment : Fragment(), AdapterStdPastAttendance.OnItemCli
         val view = inflater.inflate(R.layout.fragment_student_past_attend, container, false)
 
         setDB()
-
+        hisId = arguments?.getInt("hisId")!!
+        profName = arguments?.getString("profName")!!
         id = arguments?.getInt("id", 0)
         subName = arguments?.getString("subName")
         val dateTime = arguments?.getString("dateTime")
         view.txtDateTimeStdPastAttend.text = dateTime
         view.txtSubNameFragmentPast.text = subName
 
+        /*setting entering shared element transition for fragment*/
         sharedElementEnterTransition = TransitionInflater.from(activity as Context)
             .inflateTransition(R.transition.change_background_trans)
+
+        (activity as AppCompatActivity).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
         for (i in mDatabase?.mDao()?.getDatesTimesAndStudentHist(id!!.toInt())!!) {
             mStdPastList = i.studentPastAttendance
@@ -65,6 +77,7 @@ class StudentPastAttendFragment : Fragment(), AdapterStdPastAttendance.OnItemCli
             view.rlNoPastAttendance.visibility = View.INVISIBLE
         }
 
+        /*setting animation for views*/
         val slideFromRight = AnimationUtils.loadAnimation(
             activity as Context,
             R.anim.slide_from_right
@@ -81,32 +94,32 @@ class StudentPastAttendFragment : Fragment(), AdapterStdPastAttendance.OnItemCli
         saveAttendanceBtn(view)
 
         view.imgArrowBack.setOnClickListener {
-            val fragment =
-                SharedTransition(activity as Context).sharedEnterAndExitTrans(AttendDatesFragment())
-
-            val bundle = Bundle()
-            bundle.putString("profName", arguments?.getString("profName"))
-            bundle.putInt("hisId", arguments?.getInt("hisId")!!)
-            bundle.putString("subName", subName)
-            fragment.arguments = bundle
-            fragmentManager?.beginTransaction()
-                ?.addSharedElement(imgStdPastAttendBackground, "hist_background")
-                ?.addSharedElement(imgArrowBack, "imgBack")
-                ?.replace(R.id.fragment_container, fragment)
-                ?.commit()
-
-            // TODO: 18-10-2020 OPEN REQUIRED FRAGMENT
+            openFragment(AttendDatesFragment())
         }
-
         return view
+    }
+
+    private fun openFragment(fragment: Fragment) {
+        val attendDatesFragment =
+            SharedTransition(activity as Context).sharedEnterAndExitTrans(fragment)
+
+        val bundle = Bundle()
+        bundle.putString("profName", profName)
+        bundle.putInt("hisId", hisId)
+        bundle.putString("subName", subName)
+        attendDatesFragment.arguments = bundle
+        fragmentManager?.beginTransaction()
+            ?.addSharedElement(imgStdPastAttendBackground, "hist_background")
+            ?.addSharedElement(imgArrowBack, "imgBack")
+            ?.replace(R.id.fragment_container, attendDatesFragment)
+            ?.commit()
     }
 
     private fun saveAttendanceBtn(view: View) {
         view.imgSaveBtnPastAttend?.setOnClickListener {
             savePastAttendance()
+            openFragment(AttendDatesFragment())
             Toast.makeText(activity as Context, "Saved", Toast.LENGTH_SHORT).show()
-
-            // TODO: 18-10-2020 OPEN REQUIRED FRAGMENT
         }
     }
 

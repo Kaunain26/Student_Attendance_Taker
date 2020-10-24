@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -13,7 +12,7 @@
             android:id="@+id/imgStudentListBackground"
             android:layout_width="250dp"
             android:layout_height="match_parent"
-            android:background="@drawable/student_list_backgound" />
+            android:background="@drawable/stud_details_background" />
 
         <ImageView
             android:id="@+id/imgArrowBack"
@@ -28,10 +27,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/imgArrowBack"
             android:layout_marginLeft="15dp"
-            android:fontFamily="@font/muli_extrabold"
+            android:fontFamily="@font/paytone_one"
             android:text="Basics of Kotlin"
             android:textColor="#fff"
-            android:textSize="25sp" />
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtProfNameStdList"
@@ -39,10 +39,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtSubNameStdList"
             android:layout_marginLeft="16dp"
-            android:fontFamily="@font/muli_extrabold"
+            android:fontFamily="serif-monospace"
             android:text="by Arvind"
             android:textColor="#fff"
-            android:textSize="10sp" />
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imgAddStudents"
@@ -92,9 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/txtProfNameStdList"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            tools:listitem="@layout/recyler_student_single_row" />
+            android:layout_marginTop="10dp" />
 
         <RelativeLayout
             android:id="@+id/mHintRelativeLayout"
@@ -113,13 +112,15 @@
                 android:id="@+id/hintMessageMainScreen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imgNoRecords"
+                android:layout_below="@id/imgNoRecords"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="40dp"
                 android:fontFamily="@font/alegreya_sans"
-                android:text="Oops! Nothing Found"
+                android:text="Oops Nothing Found"
                 android:textAlignment="center"
-                android:textSize="17sp" />
+                android:textColor="#000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/hintSmallMessageMainScreen"
@@ -131,7 +132,7 @@
                 android:fontFamily="@font/alegreya_sans"
                 android:text="Looks like you haven&apos;t Added Student"
                 android:textAlignment="center"
-                android:textSize="13sp" />
+                android:textSize="15sp" />
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

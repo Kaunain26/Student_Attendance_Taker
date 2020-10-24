@@ -3,5 +3,7 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/alegreya_sans</item>
         <item>@font/alegreya_sans_thin</item>
+        <item>@font/audiowide</item>
+        <item>@font/black_ops_one</item>
     </array>
 </resources>

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlAttendanceSheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rlAttendanceSheet"
     android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imgAttendanceSheetBackground"
-        android:layout_width="180dp"
+        android:layout_width="190dp"
         android:layout_height="match_parent"
-        android:background="@drawable/attendance_sheet_background" />
+        android:background="@drawable/dark_blue_backgound" />
 
     <ImageView
         android:id="@+id/imgNavigateBtn"
@@ -22,12 +21,12 @@
 
     <TextView
         android:id="@+id/txtTitleNameAttendSheet"
-        android:layout_width="170dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/imgNavigateBtn"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
-        android:fontFamily="@font/muli_extrabold"
+        android:fontFamily="@font/paytone_one"
         android:includeFontPadding="false"
         android:text="Attendance\nSheets"
         android:textColor="#fff"
@@ -59,9 +58,7 @@
         android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/txtTitleNameAttendSheet"
-        android:layout_marginTop="20dp"
-        tools:listitem="@layout/recycler_attendance_sheet_single_row" />
+        android:layout_below="@+id/txtTitleNameAttendSheet" />
 
     <LinearLayout
         android:id="@+id/llNoAttendanceSheets"
@@ -69,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="200dp"
@@ -81,12 +78,13 @@
             android:id="@+id/hintMessageMainScreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_marginLeft="40dp"
             android:fontFamily="@font/alegreya_sans"
-            android:text="There is no Attendance sheets to display here"
+            android:text="Oops Nothing Found"
             android:textAlignment="center"
-            android:textSize="17sp" />
+            android:textColor="#FFB60B"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/hintSmallMessageMainScreen"
@@ -95,8 +93,9 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/alegreya_sans"
-            android:text="Create one from add button"
+            android:text="Create attendance  sheets from add button"
             android:textAlignment="center"
-            android:textSize="13sp" />
+            android:textColor="#000"
+            android:textSize="15sp" />
     </LinearLayout>
 </RelativeLayout>

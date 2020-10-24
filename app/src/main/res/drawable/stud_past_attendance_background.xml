@@ -4,3 +4,7 @@
         <color android:color="#466B88" />
     </item>
 </layer-list>
+<!-- <gradient
+        android:angle="360"
+        android:endColor="#FFAB40"
+        android:startColor="#F43C3C" />-->

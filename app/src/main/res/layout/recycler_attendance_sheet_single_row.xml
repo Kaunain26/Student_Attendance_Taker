@@ -7,14 +7,13 @@
     android:layout_marginTop="10dp"
     android:layout_marginRight="20dp"
     android:layout_marginBottom="10dp"
-    app:cardCornerRadius="5dp"
+    app:cardCornerRadius="15dp"
     app:cardElevation="8dp">
 
     <RelativeLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:baselineAligned="false"
         android:foreground="?attr/selectableItemBackground"
         android:padding="5dp">
 
@@ -26,7 +25,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:text="Basics of Kotlin"
-            android:textColor="#616161"
+            android:textColor="@color/darkGreen"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -37,7 +36,7 @@
             android:layout_margin="6dp"
             android:layout_toRightOf="@+id/txtSubjectName"
             android:text="(18CS61)"
-            android:textColor="#616161"
+            android:textColor="#D81B60"
             android:textSize="15sp" />
 
         <TextView
@@ -45,9 +44,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtSubCode"
-            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="cursive"
             android:text="Second Year"
-            android:textColor="#616161"
+            android:textColor="#1E2B7C"
             android:textSize="18sp" />
 
         <TextView
@@ -55,21 +58,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtClassYear"
-            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="serif-monospace"
+            android:rotationX="0"
+            android:rotationY="0"
             android:text="by Arvind "
+            android:textSize="15sp"
             android:textColor="#616161"
-            android:textSize="18sp" />
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/txtTotalStud"
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
-            android:layout_marginRight="8dp"
-            android:text="0"
-            android:textAlignment="center"
-            android:textColor="#000"
-            android:textSize="20sp" />
+            android:layout_marginEnd="8dp"
+            app:cardBackgroundColor="#FFAB00"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="8dp">
+
+            <TextView
+                android:id="@+id/txtTotalStud"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="0"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </androidx.cardview.widget.CardView>
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

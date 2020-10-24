@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -31,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="55dp"
-            android:fontFamily="@font/muli_extrabold"
+            android:fontFamily="@font/paytone_one"
             android:text="Basics of Kotlin"
             android:textColor="#fff"
             android:textSize="23sp" />
@@ -42,10 +41,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtSubNameFragmentPast"
             android:layout_marginLeft="15dp"
-            android:fontFamily="@font/muli_extrabold"
+            android:fontFamily="serif-monospace"
             android:text="Thursday,19 Oct 9:20 AM"
             android:textColor="#fff"
-            android:textSize="10sp" />
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imgSaveBtnPastAttend"
@@ -63,9 +63,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/txtDateTimeStdPastAttend"
-            android:layout_marginTop="20sp"
-            android:padding="15dp"
-            tools:listitem="@layout/recyler_student_single_row" />
+            android:layout_marginTop="20dp"
+            android:padding="5dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -85,13 +84,16 @@
             android:id="@+id/hintMessageStdPastAttend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imgNoRecordsStdPastAttend"
+            android:layout_below="@id/imgNoRecordsStdPastAttend"
             android:layout_centerHorizontal="true"
+            android:layout_marginLeft="40dp"
             android:layout_marginTop="60dp"
             android:fontFamily="@font/alegreya_sans"
-            android:text="Something went wrong"
+            android:text="Oops Nothing Found"
             android:textAlignment="center"
-            android:textSize="17sp" />
+            android:textColor="#FFB60B"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/hintSmallMessageStdPastAttend"
@@ -103,6 +105,7 @@
             android:fontFamily="@font/alegreya_sans"
             android:text="Make sure students are added"
             android:textAlignment="center"
-            android:textSize="13sp" />
+            android:textColor="#fff"
+            android:textSize="15sp" />
     </RelativeLayout>
 </RelativeLayout>
