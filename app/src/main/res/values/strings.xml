@@ -4,4 +4,8 @@
 
     <string name="open_navigation_drawer">Open</string>
     <string name="close_navigation_drawer">Close</string>
+
+    <string name="fragment_image_trans">BackgroundImageTrans</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,3 +1,4 @@
+/*
 package com.knesarcreation.attendanceapp.activity
 
 import android.content.Intent
@@ -6,7 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.knesar.attendanceapp.adapter.AdapterHistoryDatesTime
+import com.knesarcreation.attendanceapp.adapter.AdapterHistoryDatesTime
 import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.database.AttendanceDateTimes
 import com.knesarcreation.attendanceapp.database.Database
@@ -33,11 +34,6 @@ class AttendanceDatesTimeActivity : AppCompatActivity() {
 
         txtTitleNameAttendDatesTimes.text = subName
         txtProfNameAttendDatesTimes.text = profName
-
-        Log.d(
-            "pastAttendance",
-            " ${mDatabase?.mDao()?.getHistoryAndDatesTimes(hisID!!)!!}"
-        )
 
         for (i in mDatabase?.mDao()?.getHistoryAndDatesTimes(hisID!!)!!) {
             mStdHistoryList = i.attendanceDateTimes
@@ -78,3 +74,4 @@ class AttendanceDatesTimeActivity : AppCompatActivity() {
         mDatabase = DatabaseInstance().newInstance(this)
     }
 }
+*/

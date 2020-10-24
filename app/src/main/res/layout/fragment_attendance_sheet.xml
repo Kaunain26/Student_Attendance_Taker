@@ -1,44 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/contentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/attendance_sheet_background"
+    android:id="@+id/rlAttendanceSheet"
     android:orientation="vertical">
 
-    <!--  <ImageView
-          android:id="@+id/btnCreateSheet"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentRight="true"
-          android:layout_marginTop="15dp"
-          android:layout_marginRight="15dp"
-          android:foreground="?attr/selectableItemBackground"
-          android:padding="7dp"
-          android:src="@drawable/add_icon" />
+    <ImageView
+        android:id="@+id/imgAttendanceSheetBackground"
+        android:layout_width="180dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/attendance_sheet_background" />
 
-      <ImageView
-          android:id="@+id/btnHelp"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="15dp"
-          android:layout_marginRight="10dp"
-          android:layout_toLeftOf="@+id/btnCreateSheet"
-          android:foreground="?attr/selectableItemBackground"
-          android:padding="7dp"
-          android:src="@drawable/help_icon" />-->
+    <ImageView
+        android:id="@+id/imgNavigateBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/menu_icon" />
 
     <TextView
         android:id="@+id/txtTitleNameAttendSheet"
-        android:layout_width="150dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_below="@id/imgNavigateBtn"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/muli_extrabold"
+        android:includeFontPadding="false"
         android:text="Attendance\nSheets"
         android:textColor="#fff"
         android:textSize="25sp" />
+
+    <ImageView
+        android:id="@+id/imgCreateSheet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="7dp"
+        android:src="@drawable/add_icon" />
+
+    <ImageView
+        android:id="@+id/imgHelp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/imgCreateSheet"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="7dp"
+        android:src="@drawable/help_icon" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mRecyclerView"

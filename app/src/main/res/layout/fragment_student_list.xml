@@ -1,97 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/llStudentList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/student_list_backgound"
     android:orientation="vertical">
 
-    <!-- <com.google.android.material.appbar.AppBarLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:background="@drawable/student_list_backgound"
-         android:theme="@style/ThemeOverlay.AppCompat.Dark"
-         app:elevation="0dp">
-
-         <androidx.appcompat.widget.Toolbar
-             android:id="@+id/toolbarStudentList"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:background="@drawable/student_list_backgound"
-             android:theme="@style/ThemeOverlay.AppCompat.Dark"
-             app:elevation="0dp" />
-     </com.google.android.material.appbar.AppBarLayout>-->
-
-
-    <!--  <RelativeLayout
-          android:id="@+id/mRelativeLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:padding="10dp">
-
-            <ImageView
-                android:id="@+id/imgBackBtnStdList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:foreground="?attr/selectableItemBackground"
-                android:padding="6dp"
-                android:src="@drawable/arrow_back" />
-          <ImageView
-              android:id="@+id/btnAddStudent"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentRight="true"
-              android:foreground="?attr/selectableItemBackground"
-              android:padding="5dp"
-              android:src="@drawable/add_icon"
-              android:visibility="gone" />
-
-          <ImageView
-              android:id="@+id/imgSaveBtn"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginRight="20dp"
-              android:layout_toLeftOf="@+id/btnAddStudent"
-              android:foreground="?attr/selectableItemBackground"
-              android:padding="5dp"
-              android:src="@drawable/save_icon"
-              android:visibility="gone" />
-      </RelativeLayout>
-  -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!--   <TextView
-               android:id="@+id/txtSubNameStd2ndList"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginLeft="15dp"
-               android:fontFamily="@font/muli_extrabold"
-               android:text="Basics of Kotlin"
-               android:textColor="#fff"
-               android:textSize="22sp"
-               android:visibility="visible" />
+        <ImageView
+            android:id="@+id/imgStudentListBackground"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/student_list_backgound" />
 
-           <TextView
-               android:id="@+id/txtProfNameStd2ndList"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_below="@+id/txtSubNameStd2ndList"
-               android:layout_marginLeft="16dp"
-               android:fontFamily="@font/muli_extrabold"
-               android:text="by Arvind"
-               android:textAlignment="center"
-               android:textColor="#fff"
-               android:textSize="10sp"
-               android:visibility="visible" />-->
+        <ImageView
+            android:id="@+id/imgArrowBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:src="@drawable/arrow_back" />
 
         <TextView
             android:id="@+id/txtSubNameStdList"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
+            android:layout_below="@id/imgArrowBack"
             android:layout_marginLeft="15dp"
             android:fontFamily="@font/muli_extrabold"
             android:text="Basics of Kotlin"
@@ -109,12 +44,35 @@
             android:textColor="#fff"
             android:textSize="10sp" />
 
+        <ImageView
+            android:id="@+id/imgAddStudents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="8dp"
+            android:src="@drawable/add_icon"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/imgSaveAttendance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="45dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="8dp"
+            android:src="@drawable/save_icon"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/txtSelect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_toLeftOf="@+id/checkAll"
+            android:layout_above="@id/stdRecyclerView"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="45dp"
+            android:layout_marginBottom="5dp"
             android:text="Select all"
             android:textSize="15sp"
             android:visibility="gone" />
@@ -123,9 +81,10 @@
             android:id="@+id/checkAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="5dp"
+            android:layout_above="@id/stdRecyclerView"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="5dp"
             android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -133,6 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/txtProfNameStdList"
+            android:layout_marginTop="10dp"
             android:padding="10dp"
             tools:listitem="@layout/recyler_student_single_row" />
 

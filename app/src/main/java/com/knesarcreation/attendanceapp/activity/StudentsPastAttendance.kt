@@ -1,3 +1,4 @@
+/*
 package com.knesarcreation.attendanceapp.activity
 
 import android.os.Bundle
@@ -19,7 +20,9 @@ class StudentsPastAttendance : AppCompatActivity(), AdapterStdPastAttendance.OnI
     private var mDatabase: Database? = null
     private var mStdPastList = mutableListOf<StudentPastAttendance>()
 
-    /*For saving position of checkbox which is checked or not*/
+    */
+/*For saving position of checkbox which is checked or not*//*
+
     private var positionList = mutableListOf<Int>()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +74,9 @@ class StudentsPastAttendance : AppCompatActivity(), AdapterStdPastAttendance.OnI
     private fun savePastAttendance() {
         for (k in positionList) {
 
-            /*Saving: The changes made in past attendance with respect to position which was added to positionList*/
+            */
+/*Saving: The changes made in past attendance with respect to position which was added to positionList*//*
+
             if (mStdPastList[k].isChecked) {
                 mDatabase?.mDao()
                     ?.updateStudentPastAttendance(true, mStdPastList[k].id)
@@ -92,7 +97,9 @@ class StudentsPastAttendance : AppCompatActivity(), AdapterStdPastAttendance.OnI
         myViewHolder: AdapterStdPastAttendance.MyViewHolder?
     ) {
         showAlertDialog = true
-        /*Adding position to positionList when checkbox is checked*/
+        */
+/*Adding position to positionList when checkbox is checked*//*
+
         positionList.add(Position)
         if (myViewHolder?.checkbox?.isChecked!!) {
             for (i in mDatabase?.mDao()?.getStudentDetails(mStdPastList[Position].stdUsn!!)!!) {
@@ -113,4 +120,4 @@ class StudentsPastAttendance : AppCompatActivity(), AdapterStdPastAttendance.OnI
             }
         }
     }
-}
+}*/

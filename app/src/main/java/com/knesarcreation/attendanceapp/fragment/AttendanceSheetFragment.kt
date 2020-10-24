@@ -5,14 +5,21 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
+import android.os.Build
 import android.os.Bundle
-import android.view.*
+import android.transition.TransitionInflater
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,14 +33,16 @@ import com.knesarcreation.attendanceapp.database.Database
 import com.knesarcreation.attendanceapp.database.DatabaseInstance
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_main_screen.*
+import kotlinx.android.synthetic.main.fragment_attendance_sheet.*
 import kotlinx.android.synthetic.main.fragment_attendance_sheet.view.*
 
 
-class AttendanceSheetFragment : Fragment() {
+class AttendanceSheetFragment : Fragment(), AdapterAttendanceSheet.OnItemClickListener {
 
     var sheetNo = 0
     var isActive = true
-    private val clickedOn = true
+
+    /*private val clickedOn = true*/
     private lateinit var mAdapter: AdapterAttendanceSheet
     var mAttendanceList = mutableListOf<AttendanceSheet>()
     var mDatabase: Database? = null
@@ -54,13 +63,21 @@ class AttendanceSheetFragment : Fragment() {
         view.txtTitleNameAttendSheet.text = "Attendance Sheets"
         isActive = true
 
-        setHasOptionsMenu(true)
-
-        (activity as AppCompatActivity).toolbar.setBackgroundResource(R.drawable.attendance_sheet_background)
+        sharedElementEnterTransition = TransitionInflater.from(activity as Context)
+            .inflateTransition(R.transition.change_background_trans)
 
         /*Setting up database*/
         setDB()
 
+        val slideFromRight = AnimationUtils.loadAnimation(
+            activity as Context,
+            R.anim.slide_from_right
+        )
+        val layoutRightSlide =
+            AnimationUtils.loadAnimation(activity as Context, R.anim.layout_right_slide)
+
+        view.txtTitleNameAttendSheet.startAnimation(slideFromRight)
+        view.mRecyclerView.startAnimation(layoutRightSlide)
 
         view.mRecyclerView.setHasFixedSize(true)
         view.mRecyclerView.layoutManager = LinearLayoutManager(activity as Context)
@@ -69,6 +86,25 @@ class AttendanceSheetFragment : Fragment() {
 
         buildRecyclerView(view)
 
+        view.imgNavigateBtn.setOnClickListener {
+            (activity as AppCompatActivity).mDrawerLayout.openDrawer(GravityCompat.START)
+        }
+
+        /*Opening a help dialog*/
+        view.imgHelp.setOnClickListener {
+            helpDialog()
+        }
+
+        /*opens a CreateAttendanceSheet activity for adding attendance sheets*/
+        view.imgCreateSheet.setOnClickListener {
+            startActivityForResult(
+                Intent(activity as Context, CreateAttendanceSheet::class.java),
+                REQUEST_CODE
+            )
+        }
+
+        /*ItemTouch Helper give support for swiping views through SimpleCallbacks
+        *  Using this we are  deleting and editing attendance sheets*/
         var deletedSheet: AttendanceSheet?
         ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
@@ -269,8 +305,8 @@ class AttendanceSheetFragment : Fragment() {
     private fun buildRecyclerView(view: View) {
         mAdapter = AdapterAttendanceSheet(
             activity as Context,
-            isActive,
-            clickedOn,
+            /* isActive, *//*isActive = true*/
+            this,
             mAttendanceList,
             fragmentManager
         )
@@ -285,63 +321,31 @@ class AttendanceSheetFragment : Fragment() {
         }
     }
 
-    /* private fun callCreateAttendanceSheet(view: View) {
-         view.btnCreateSheet.setOnClickListener {
-             startActivityForResult(
-                 Intent(activity as Context, CreateAttendanceSheet::class.java),
-                 REQUEST_CODE
-             )
-         }
-     }*/
+    private fun helpDialog() {
+        val builder = AlertDialog.Builder(activity as Context)
+        val dialogLayout: View = layoutInflater
+            .inflate(R.layout.help_dialog, null)
+        val imgView: ImageView =
+            dialogLayout.findViewById<View>(R.id.imgSwipe) as ImageView
+        val txtView = dialogLayout.findViewById<View>(R.id.txtRightSwipe) as TextView
+        val btnNext: Button = dialogLayout.findViewById<View>(R.id.btnNext) as Button
+        val btnGotIt: Button =
+            dialogLayout.findViewById<View>(R.id.btnGotIt) as Button
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.attendance_sheet_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+        btnNext.visibility = View.VISIBLE
+        builder.setView(dialogLayout)
+        val dialog: AlertDialog = builder.create()
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.ic_help -> {
+        btnNext.setOnClickListener {
 
-                val builder = AlertDialog.Builder(activity as Context)
-                val dialogLayout: View = layoutInflater
-                    .inflate(R.layout.help_dialog, null)
-                val imgView: ImageView =
-                    dialogLayout.findViewById<View>(R.id.imgSwipe) as ImageView
-                val txtView = dialogLayout.findViewById<View>(R.id.txtRightSwipe) as TextView
-                val btnNext: Button = dialogLayout.findViewById<View>(R.id.btnNext) as Button
-                val btnGotIt: Button =
-                    dialogLayout.findViewById<View>(R.id.btnGotIt) as Button
-
-                btnNext.visibility = View.VISIBLE
-                builder.setView(dialogLayout)
-                val dialog: AlertDialog = builder.create()
-
-                btnNext.setOnClickListener {
-
-                    btnNext.visibility = View.INVISIBLE
-                    btnGotIt.visibility = View.VISIBLE
-                    imgView.setImageResource(R.drawable.swipe_left)
-                    txtView.text = "Do Right Swipe To ' Edit ' Any Item"
-                }
-                btnGotIt.setOnClickListener { dialog.dismiss() }
-                dialog.setCancelable(false)
-                dialog.show()
-
-            }
-
-            R.id.ic_add -> {
-                startActivityForResult(
-                    Intent(activity as Context, CreateAttendanceSheet::class.java),
-                    REQUEST_CODE
-                )
-            }
-
-            android.R.id.home -> {
-                (activity as AppCompatActivity).mDrawerLayout.openDrawer(GravityCompat.START)
-            }
+            btnNext.visibility = View.INVISIBLE
+            btnGotIt.visibility = View.VISIBLE
+            imgView.setImageResource(R.drawable.swipe_left)
+            txtView.text = "Do Right Swipe To ' Edit ' Any Item"
         }
-        return true
+        btnGotIt.setOnClickListener { dialog.dismiss() }
+        dialog.setCancelable(false)
+        dialog.show()
     }
 
     override fun onResume() {
@@ -360,4 +364,54 @@ class AttendanceSheetFragment : Fragment() {
     private fun setDB() {
         mDatabase = DatabaseInstance().newInstance(activity as Context)
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val itemImgBackGround = view.findViewById<ImageView>(R.id.imgAttendanceSheetBackground)
+        val imgCreateSheet = view.findViewById<ImageView>(R.id.imgCreateSheet)
+        val imgHelp = view.findViewById<ImageView>(R.id.imgHelp)
+        val imgNavigateBtn = view.findViewById<ImageView>(R.id.imgNavigateBtn)
+        ViewCompat.setTransitionName(itemImgBackGround, "background")
+        ViewCompat.setTransitionName(imgCreateSheet, "imgAddIcon")
+        ViewCompat.setTransitionName(imgHelp, "imgSaveAndHelp")
+        ViewCompat.setTransitionName(imgNavigateBtn, "imgArrowBack")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onClick(position: Int, viewHolder: AdapterAttendanceSheet.MyViewHolder) {
+
+        val studentListFragment = StudentListFragment()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            /*setting a return transition and exit transition*/
+            sharedElementReturnTransition = TransitionInflater.from(activity as Context)
+                .inflateTransition(R.transition.change_background_trans)
+            exitTransition = TransitionInflater.from(activity as Context)
+                .inflateTransition(android.R.transition.fade)
+
+            /* setting a entering transition*/
+            studentListFragment.sharedElementEnterTransition =
+                TransitionInflater.from(activity as Context)
+                    .inflateTransition(R.transition.change_background_trans)
+            studentListFragment.enterTransition = TransitionInflater.from(activity as Context)
+                .inflateTransition(android.R.transition.fade)
+        }
+
+        val bundle = Bundle()
+        bundle.putInt("sheetNo", mAttendanceList[position].sheetNo)
+        bundle.putString("subName", mAttendanceList[position].subName)
+        bundle.putString("profName", mAttendanceList[position].profName)
+        bundle.putBoolean("isActive", isActive)
+        studentListFragment.arguments = bundle
+
+        fragmentManager?.beginTransaction()
+            ?.addSharedElement(imgAttendanceSheetBackground, "background")
+            ?.addSharedElement(imgCreateSheet, "imgAddIcon")
+            ?.addSharedElement(imgHelp, "imgSaveAndHelp")
+            ?.addSharedElement(imgNavigateBtn, "imgArrowBack")
+            ?.replace(R.id.fragment_container, studentListFragment)
+            ?.commit()
+    }
 }
+

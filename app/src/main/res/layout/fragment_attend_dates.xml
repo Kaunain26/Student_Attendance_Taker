@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgHistDatesBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/attendance_hist_dates_background" />
+
+        <ImageView
+            android:id="@+id/imgArrowBackHistoryDates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="6dp"
+            android:src="@drawable/arrow_back" />
+
+        <TextView
+            android:id="@+id/txtTitleNameAttendDatesTimes"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgArrowBackHistoryDates"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/muli_extrabold"
+            android:text="Basics of Kotlin"
+            android:textColor="#fff"
+            android:textSize="23sp" />
+
+        <TextView
+            android:id="@+id/txtProfNameAttendDatesTimes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtTitleNameAttendDatesTimes"
+            android:layout_marginLeft="13dp"
+            android:fontFamily="@font/muli_extrabold"
+            android:text="by Arvinda"
+            android:textColor="#fff"
+            android:textSize="10sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mRecyclerViewAttendHistoryDatesTimes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/txtProfNameAttendDatesTimes"
+            android:layout_marginTop="15dp"
+            android:layoutAnimation="@anim/layout_animation_slide_from_right"
+            tools:listitem="@layout/recycler_history_date_time_single_row" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlNoHistoryAttend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/imgNoRecordsHistDatesTime"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_no_records" />
+
+        <TextView
+            android:id="@+id/hintMessageHistDatesTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgNoRecordsHistDatesTime"
+            android:layout_marginTop="60dp"
+            android:fontFamily="@font/alegreya_sans"
+            android:text="No History Records Found To Display Here"
+            android:textAlignment="center"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/hintSmallMessageHistDatesTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hintMessageHistDatesTime"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/alegreya_sans"
+            android:text="Take Attendance To Display History"
+            android:textAlignment="center"
+            android:textSize="13sp" />
+    </RelativeLayout>
+</RelativeLayout>

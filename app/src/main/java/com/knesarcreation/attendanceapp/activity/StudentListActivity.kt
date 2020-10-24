@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.adapter.AdapterStudentList
 import com.knesarcreation.attendanceapp.database.*
-import kotlinx.android.synthetic.main.activity_student_list.*
+import kotlinx.android.synthetic.main.fragment_student_list.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -43,7 +43,7 @@ class StudentListActivity : AppCompatActivity(), AdapterStudentList.OnItemClickL
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_student_list)
+        setContentView(R.layout.fragment_student_list)
 
 
         sheetNo = intent?.getIntExtra("sheetNo", 0)

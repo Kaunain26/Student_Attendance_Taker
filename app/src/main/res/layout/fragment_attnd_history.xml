@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/contentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/attendance_history_background"
     android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imgHistoryBackground"
+        android:layout_width="180dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/attendance_history_background" />
+
+    <ImageView
+        android:id="@+id/imgNavigateBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/menu_icon" />
 
     <TextView
         android:id="@+id/txtTitleNameFragmentHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_below="@id/imgNavigateBtn"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/muli_extrabold"
-        android:text="Attendance History"
+        android:text="Attendance\nHistory"
+        android:textColor="#fff"
         android:textSize="25sp" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -21,7 +37,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/txtTitleNameFragmentHistory"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        tools:listitem="@layout/recycler_attendance_sheet_single_row" />
 
     <ImageView
         android:id="@+id/imgNoRecordsAttendHistory"

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <transitionSet>
     <changeTransform />  <!--changeTransform captures scale and rotation for Views before and after the scene change-->
-    <changeBounds /> <!-- changeBounds captures the layout bounds of target views before and after the scene change-->
+    <changeBounds /><!-- changeBounds captures the layout bounds of target views before and after the scene change-->
+    <changeClipBounds />
+    <changeImageTransform />
 </transitionSet>

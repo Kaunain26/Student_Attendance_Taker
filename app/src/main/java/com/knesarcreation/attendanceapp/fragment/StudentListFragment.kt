@@ -2,11 +2,19 @@ package com.knesarcreation.attendanceapp.fragment
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,9 +22,9 @@ import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.activity.AddStudentActivity
 import com.knesarcreation.attendanceapp.adapter.AdapterStudentList
 import com.knesarcreation.attendanceapp.database.*
-import kotlinx.android.synthetic.main.activity_main_screen.*
-import kotlinx.android.synthetic.main.activity_student_list.*
-import kotlinx.android.synthetic.main.activity_student_list.view.*
+import com.knesarcreation.attendanceapp.util.SharedTransition
+import kotlinx.android.synthetic.main.fragment_student_list.*
+import kotlinx.android.synthetic.main.fragment_student_list.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,56 +32,90 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
 
     private var datesTime = ""
 
-    /*isActive variable is used to check which fragment is open by there values TRUE or False*/
-    private var isActive = false
 
-    /*showAlertDialog is used to show AlertDialog Box when any checkbox is tried to check or uncheck*/
-    private var showAlertDialog = false
     private var mAdapter: AdapterStudentList? = null
     private var mDatabase: Database? = null
-    private var mListStd = mutableListOf<StudentListClass>()
     private var profName: String? = null
     private var sheetNo: Int? = 0
     private var subName: String? = null
+    private var sharedTransition: SharedTransition? = null
 
     companion object {
         const val REQUEST_CODE = 1
+
+        /*isActive variable is used to check which fragment is open by there values TRUE or False*/
+        var isActive = false
+
+        /*showAlertDialog is used to show AlertDialog Box when any checkbox is tried to check or uncheck*/
+        var showAlertDialog = false
+
+        var mListStd = mutableListOf<StudentListClass>()
+
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val imgBackground = view.findViewById<ImageView>(R.id.imgStudentListBackground)
+        val imgAddStudents = view.findViewById<ImageView>(R.id.imgAddStudents)
+        val imgSaveAttendance = view.findViewById<ImageView>(R.id.imgSaveAttendance)
+        val imgArrowBack = view.findViewById<ImageView>(R.id.imgArrowBack)
+        ViewCompat.setTransitionName(imgBackground, "background")
+        ViewCompat.setTransitionName(imgAddStudents, "imgAddIcon")
+        ViewCompat.setTransitionName(imgSaveAttendance, "imgSaveAndHelp")
+        ViewCompat.setTransitionName(imgArrowBack, "imgArrowBack")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.activity_student_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_student_list, container, false)
+
+        sharedTransition = SharedTransition(activity as Context)
 
         subName = arguments?.getString("subName")
         sheetNo = arguments?.getInt("sheetNo")
         profName = arguments?.getString("profName")
         isActive = arguments?.getBoolean("isActive")!!
 
-        (activity as AppCompatActivity).toolbar.setBackgroundResource(R.drawable.student_list_backgound)
+        sharedElementEnterTransition = TransitionInflater.from(activity as Context)
+            .inflateTransition(R.transition.change_background_trans)
 
         view.txtSubNameStdList.text = subName
-
         view.txtProfNameStdList.text = profName
+
+        setDB()
+        gettingDataFromDatabase(view)
+
+        val slideFromRight = AnimationUtils.loadAnimation(
+            activity as Context,
+            R.anim.slide_from_right
+        )
 
         if (isActive) {
             /*Making views Visible which are required in StudentListActivity when opened from Attendance sheet fragment*/
-            view.txtSelect.visibility = View.VISIBLE
-            view.checkAll.visibility = View.VISIBLE
+            if (mListStd.isNotEmpty()) {
+                view.txtSelect.visibility = View.VISIBLE
+                view.checkAll.visibility = View.VISIBLE
+            }
+            view.imgAddStudents.visibility = View.VISIBLE
+            view.imgSaveAttendance.visibility = View.VISIBLE
             setHasOptionsMenu(true)
         }
 
-        setDB()
+        view.imgAddStudents.setOnClickListener {
+            startActivityForResult(
+                Intent(activity as Context, AddStudentActivity::class.java), REQUEST_CODE
+            )
+        }
 
-        /*  view.btnAddStudent.setOnClickListener {
-              startActivityForResult(
-                  Intent(activity as Context, AddStudentActivity::class.java), REQUEST_CODE
-              )
-          }*/
-
-        gettingDataFromDatabase(view)
+        val normalRightSlide =
+            AnimationUtils.loadAnimation(activity as Context, R.anim.layout_right_slide)
+        view.stdRecyclerView.startAnimation(slideFromRight)
+        view.txtSubNameStdList.startAnimation(slideFromRight)
+        view.txtProfNameStdList.startAnimation(normalRightSlide)
 
         view.stdRecyclerView.layoutManager = LinearLayoutManager(activity as Context)
 
@@ -87,12 +129,13 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
             onCheckedChanged(checkAll.isChecked, view)
         }
 
-        /* view.imgSaveBtn.setOnClickListener {
-         }*/
+        view.imgSaveAttendance.setOnClickListener {
+            saveAttendance()
+        }
 
-        /* view.imgBackBtnStdList.setOnClickListener {
-             backPressed()
-         }*/
+        view.imgArrowBack.setOnClickListener {
+            backPressed()
+        }
 
         /*todo: Will implement  later*/
         swipeToDelete()
@@ -171,10 +214,11 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
 
             /*After saving attendance open AttendanceSheet Fragment*/
             openFragment(AttendanceSheetFragment())
+//            fragmentTransaction?.openMainFragment(AttendanceSheetFragment(), view)
         }
 
         builder.setNegativeButton("Don't save") { dialog, _ ->
-            dialog.dismiss();
+            dialog.dismiss()
         }
         builder.setCancelable(false)
         builder.show()
@@ -193,6 +237,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
 
     private fun onCheckedChanged(isChecked: Boolean, view: View) {
         mAdapter?.toggleSelection(isChecked)
+        showAlertDialog = true
         view.txtSelect.text = if (isChecked) {
             for (i in mListStd) {
                 mDatabase?.mDao()?.updateStudentList(true, i.stdUsn)
@@ -207,10 +252,6 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
     }
 
     private fun backPressed() {
-        if (mListStd.isEmpty()) {
-            activity?.finish()
-            return
-        }
         if (isActive) {
             if (showAlertDialog) {
                 /*If AttendanceSheet Fragment opens this Fragment*/
@@ -221,6 +262,8 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                     for (i in mListStd) {
                         mDatabase?.mDao()?.updateStudentList(false, i.stdUsn)
                     }
+//                    fragmentTransaction?.openMainFragment(AttendanceSheetFragment(), view)
+                    showAlertDialog = false
                     openFragment(AttendanceSheetFragment())
                 }
 
@@ -231,6 +274,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                 builder.show()
             } else {
                 openFragment(AttendanceSheetFragment())
+//                fragmentTransaction?.openMainFragment(AttendanceSheetFragment(), view)
             }
         } else {
             /*if StudentInformationFragment opens this Fragment*/
@@ -240,8 +284,30 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
     }
 
     private fun openFragment(fragment: Fragment) {
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.fragment_container, fragment)?.commit()
+        /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+             *//*setting a return transition and exit transition*//*
+            sharedElementReturnTransition = TransitionInflater.from(activity as Context)
+                .inflateTransition(R.transition.change_background_trans)
+            exitTransition = TransitionInflater.from(activity as Context)
+                .inflateTransition(android.R.transition.fade)
+
+            *//* setting a entering transition*//*
+            fragment.sharedElementEnterTransition =
+                TransitionInflater.from(activity as Context)
+                    .inflateTransition(R.transition.change_background_trans)
+            fragment.enterTransition = TransitionInflater.from(activity as Context)
+                .inflateTransition(android.R.transition.fade)
+        }*/
+        val replaceFragment = sharedTransition?.sharedEnterAndExitTrans(fragment)
+        replaceFragment?.let {
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.addSharedElement(imgStudentListBackground, "background")
+                ?.addSharedElement(imgAddStudents, "imgAddIcon")
+                ?.addSharedElement(imgSaveAttendance, "imgSaveAndHelp")
+                ?.addSharedElement(imgArrowBack, "imgArrowBack")
+                ?.replace(R.id.fragment_container, it)?.commit()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -279,25 +345,6 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
             }
             mDatabase?.mDao()?.insertStudentList(currentStud)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.student_list_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.ic_save -> {
-                saveAttendance()
-            }
-            R.id.ic_add -> {
-                startActivityForResult(
-                    Intent(activity as Context, AddStudentActivity::class.java), REQUEST_CODE
-                )
-            }
-        }
-        return true
     }
 
     override fun onResume() {

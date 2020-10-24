@@ -43,7 +43,6 @@ class AdapterStudentList(
         var imgArrowNext: ImageView = view.findViewById(R.id.imgArrowNext)
         var stdName: TextView = view.findViewById(R.id.txtStudentName)
         var stdUsn: TextView = view.findViewById(R.id.txtStdUsn)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -68,6 +67,7 @@ class AdapterStudentList(
                 .setOnClickListener {
                     listener.onCheckBoxClicked(position, holder)
                 }
+
 
         } else {
             holder.checkbox.visibility = View.INVISIBLE
