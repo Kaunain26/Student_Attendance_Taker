@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/welcome_screen_button_background"
+    android:background="@drawable/stud_past_attendance_background"
     android:orientation="vertical"
     android:padding="15dp">
 
@@ -23,9 +23,10 @@
             android:id="@+id/txtTitleNameCreateAttendSheet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:fontFamily="@font/muli_extrabold"
             android:text="Create Attendance Sheet"
+            android:textColor="#fff"
             android:textSize="25sp" />
 
         <ImageView
@@ -34,14 +35,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:foreground="?attr/selectableItemBackground"
-            android:src="@drawable/save_icon" />
+            android:src="@drawable/save_icon_white" />
     </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:text="Note : ( * )  mandatory fields" />
+        android:text="Note : ( * )  mandatory fields"
+        android:textColor="#fff" />
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -49,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="Prof. or Lecturer name*"
+        app:boxBackgroundColor="#fff"
         app:boxStrokeColor="#90caf9"
         app:boxStrokeErrorColor="#f33c3c"
         app:boxStrokeWidthFocused="2dp"
@@ -70,6 +73,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:hint="Subject name*"
+        app:boxBackgroundColor="#fff"
         app:boxStrokeColor="#90caf9"
         app:boxStrokeErrorColor="#f33c3c"
         app:boxStrokeWidthFocused="2dp"
@@ -92,6 +96,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:hint="Subject code"
+        app:boxBackgroundColor="#fff"
         app:boxStrokeColor="#349ff6"
         app:boxStrokeErrorColor="#f33c3c"
         app:boxStrokeWidthFocused="2dp"
@@ -112,7 +117,9 @@
             android:id="@+id/txtChooseClass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="Choose Year:"
+            android:textColor="#fff"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -120,7 +127,8 @@
             android:id="@+id/mSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/txtChooseClass" />
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/txtChooseClass" />
     </RelativeLayout>
 </LinearLayout>
