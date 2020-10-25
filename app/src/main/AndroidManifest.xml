@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_attendance_app"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_attendance_app_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.MainScreenActivity">
@@ -16,24 +16,13 @@
             android:name=".activity.CreateAttendanceSheet"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
-        <!-- <activity
-             android:name=".activity.StudentListActivity"
-             android:configChanges="orientation|screenSize"
-             android:screenOrientation="portrait" />-->
+
         <activity
             android:name=".activity.AddStudentActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.StudentDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.AttendanceDatesTimeActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.StudentsPastAttendance"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
 
