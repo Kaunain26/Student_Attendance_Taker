@@ -1,4 +1,4 @@
-package com.knesarcreation.attendanceapp.activity;
+package com.knesarcreation.attendanceapp.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,7 +16,7 @@ class SplashScreenActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(Intent(this, MainScreenActivity::class.java))
             finish()
-        }, 500)
+        }, 1000)
     }
 }
 

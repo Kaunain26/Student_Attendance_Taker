@@ -101,6 +101,7 @@ class AttendDatesFragment : Fragment() {
                     ?.replace(R.id.fragment_container, it1)?.commit()
             }
         }
+
         return view
     }
 

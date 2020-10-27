@@ -36,15 +36,15 @@ interface Dao {
 
     @Query("DELETE FROM StudentDetails WHERE sheetNo = :sheetNo")
     fun deleteStdDetails(sheetNo: Int)
-/*
-    @Query("DELETE FROM StudentPastAttendance")
-    fun deleteStudentFromStdPastAttendance(str: String?)
 
-    @Query("DELETE FROM StudentDetails")
-    fun deleteStudentFromStdDetails(str: String?)
+    @Query("DELETE FROM StudentPastAttendance WHERE stdId= :stdId")
+    fun deleteStudentFromStdPastAttendance(stdId: Int)
 
-    @Query("DELETE FROM StudentListClass")
-    fun deleteStudentFromStdList(str: String?)*/
+    @Query("DELETE FROM StudentDetails WHERE id = :stdId")
+    fun deleteStudentFromStdDetails(stdId: Int)
+
+    @Query("DELETE FROM StudentListClass WHERE stdId= :stdId")
+    fun deleteStudentFromStdList(stdId: Int)
 
     @Query("UPDATE AttendanceHistory SET  subName = :subName , subCode = :subCode ,  profName =:profName , classYear = :classYear WHERE hisID=:hisId ")
     fun editAttendanceHistory(
@@ -80,7 +80,7 @@ interface Dao {
     fun getHistoryAndDatesTimes(id: Int): List<AttendanceHistoryAndAttendanceDatesTime>
 
     @Query("SELECT * FROM AttendanceDateTimes WHERE id = :id")
-    fun getDatesTimesAndStudentHist(id: Int): List<AttendanceDatesTimeAndStudentAttendanceHistory>
+    fun getDatesTimesAndStudentHist(id: Int): List<AttendanceDatesTimeAndStudentPastAttendance>
 
 
     /* Update student details*/
@@ -123,8 +123,8 @@ interface Dao {
     fun updateStudentPastAttendance(isChecked: Boolean, id: Int)
 
 
-    @Query("UPDATE StudentPastAttendance SET stdName =:stdName WHERE id = :id")
-    fun updateNameStudentHistory(id: Int, stdName: String?)
+    @Query("UPDATE StudentPastAttendance SET stdName =:stdName WHERE stdId = :id")
+    fun updateStudNameInStudPastAttend(id: Int, stdName: String?)
 
     @Query("UPDATE StudentPastAttendance SET stdUsn =:stdUsn WHERE stdId = :id")
     fun updateUSNStudentAttendanceHistory(id: Int, stdUsn: String?)
@@ -135,4 +135,6 @@ interface Dao {
     @Query("UPDATE StudentListClass SET stdUsn =:stdUsn WHERE stdId =:id")
     fun updateUSNStudentListsFromID(id: Int, stdUsn: String?)
 
+    @Query("SELECT COUNT() FROM StudentPastAttendance WHERE stdHistId=:id ")
+    fun getItemCount(id: Int): Int
 }

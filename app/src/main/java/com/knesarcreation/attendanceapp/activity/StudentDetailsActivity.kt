@@ -1,7 +1,6 @@
 package com.knesarcreation.attendanceapp.activity
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -52,7 +51,7 @@ class StudentDetailsActivity : AppCompatActivity() {
                     if (attendancePercentage > 85.000) {
                         txtStdPercentage.setTextColor(resources.getColor(R.color.darkGreen))
                     } else {
-                        txtStdPercentage.setTextColor(Color.RED)
+                        txtStdPercentage.setTextColor(resources.getColor(R.color.darkRed))
                         stdPercentageMessage.text =
                             "Your attendance percentage is less \nIt should be above 85%"
                     }

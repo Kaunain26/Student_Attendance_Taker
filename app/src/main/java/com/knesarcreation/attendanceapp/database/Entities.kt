@@ -72,7 +72,7 @@ data class StudentPastAttendance(
     val stdId: Int,
 )
 
-data class AttendanceDatesTimeAndStudentAttendanceHistory(
+data class AttendanceDatesTimeAndStudentPastAttendance(
     @Embedded val attendanceDateTimes: AttendanceDateTimes,
     @Relation(
         parentColumn = "id",

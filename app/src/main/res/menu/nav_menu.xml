@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/attendanceSheet"
-            android:icon="@drawable/attendance_app_icon"
+            android:icon="@drawable/sheet_icon"
             android:title="Attendance Sheet"
             app:showAsAction="never" />
         <item

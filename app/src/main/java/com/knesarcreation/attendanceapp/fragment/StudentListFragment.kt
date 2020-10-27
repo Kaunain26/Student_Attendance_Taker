@@ -2,6 +2,7 @@ package com.knesarcreation.attendanceapp.fragment
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
 import android.os.Build
 import android.os.Bundle
 import android.transition.TransitionInflater
@@ -11,20 +12,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.knesarcreation.attendanceapp.R
 import com.knesarcreation.attendanceapp.activity.AddStudentActivity
 import com.knesarcreation.attendanceapp.adapter.AdapterStudentList
 import com.knesarcreation.attendanceapp.database.*
 import com.knesarcreation.attendanceapp.util.SharedTransition
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.activity_main_screen.*
+import kotlinx.android.synthetic.main.edit_stud_details_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_student_list.*
 import kotlinx.android.synthetic.main.fragment_student_list.view.*
 import java.text.SimpleDateFormat
@@ -33,13 +40,12 @@ import java.util.*
 class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
 
     private var datesTime = ""
-
-
     private var mAdapter: AdapterStudentList? = null
     private var mDatabase: Database? = null
     private var profName: String? = null
     private var sheetNo: Int? = 0
     private var subName: String? = null
+
     private var sharedTransition: SharedTransition? = null
 
     companion object {
@@ -99,6 +105,8 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                 view.txtSelect.visibility = View.VISIBLE
                 view.checkAll.visibility = View.VISIBLE
             }
+            swipeToDelete(view) /*this will work only when isActive is True i.e, when this fragment is opened  by attendance sheet*/
+
             view.imgStudentListBackground.setBackgroundResource(R.drawable.dark_blue_backgound)
             view.imgAddStudents.visibility = View.VISIBLE
             view.imgSaveAttendance.visibility = View.VISIBLE
@@ -142,9 +150,6 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
             arrowBackButton()
         }
 
-        /*todo: Will implement  later*/
-        swipeToDelete()
-
         return view
     }
 
@@ -157,7 +162,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
             mListStd = list.studentListClass
         }
         if (mListStd.isNotEmpty()) {
-            view.mHintRelativeLayout.visibility = View.INVISIBLE
+            view.rlNoStudents.visibility = View.INVISIBLE
         }
     }
 
@@ -172,7 +177,10 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
         val builder = AlertDialog.Builder(activity as Context)
         builder.setTitle("Save Attendance" as CharSequence)
         builder.setMessage("Do you want to save changes to attendance?" as CharSequence)
+
         builder.setPositiveButton("Save") { _, _ ->
+            /*assigning false here that next time it dialog won't show*/
+            showAlertDialog = false
 
             val date = Date()
             val simpleDateFormat = SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss aaa", Locale.US)
@@ -187,11 +195,11 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
 
                     val stdList = StudentPastAttendance(
                         System.currentTimeMillis().toInt(),
-                        id,
+                        id,  /*its the same id which is passed in attendanceDatesFragment*/
                         i.isChecked,
                         i.stdName,
                         i.stdUsn,
-                        i.stdId,   /*Passing the same stdId which is passed in stdDetails and stdListClass*/
+                        i.stdId, /*Passing the same stdId which is passed in stdDetails and stdListClass*/
                     )
                     mDatabase?.mDao()?.insertStudentHistory(stdList)
 
@@ -212,6 +220,10 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                     }
                 }
             }
+
+            val itemCount = mDatabase?.mDao()?.getItemCount(id)
+            Toast.makeText(activity as Context, "$itemCount", Toast.LENGTH_SHORT).show()
+
             /*After saving Attendance making checkbox unchecked*/
             for (k in mListStd) {
                 mDatabase?.mDao()?.updateStudentList(false, k.stdUsn)
@@ -230,7 +242,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
 
     override fun onCheckBoxClicked(position: Int, viewHolder: AdapterStudentList.ViewHolder?) {
         val studentListClass = mListStd[position]
-        showAlertDialog = true
+        showAlertDialog = true // show alert dialog that you have changed something
         if (viewHolder?.checkbox?.isChecked!!) {
             mDatabase?.mDao()?.updateStudentList(true, studentListClass.stdUsn)
         } else {
@@ -241,7 +253,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
 
     private fun onCheckedChanged(isChecked: Boolean, view: View) {
         mAdapter?.toggleSelection(isChecked)
-        showAlertDialog = true
+        showAlertDialog = true  // show alert dialog that you have changed something
         view.txtSelect.text = if (isChecked) {
             for (i in mListStd) {
                 mDatabase?.mDao()?.updateStudentList(true, i.stdUsn)
@@ -266,6 +278,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                     for (i in mListStd) {
                         mDatabase?.mDao()?.updateStudentList(false, i.stdUsn)
                     }
+                    /*assigning false here that next time it dialog won't show*/
                     showAlertDialog = false
                     openFragmentWithTransition(AttendanceSheetFragment())
                 }
@@ -328,7 +341,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
 
             mAdapter?.notifyDataSetChanged()
             if (mListStd.isNotEmpty()) {
-                mHintRelativeLayout.visibility = View.INVISIBLE
+                rlNoStudents.visibility = View.INVISIBLE
             }
             mDatabase?.mDao()?.insertStudentList(currentStud)
         }
@@ -340,10 +353,160 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
         super.onResume()
     }
 
-    private fun swipeToDelete() {
-        /*   ItemTouchHelper(`StudentListActivity$swipeToDelete$1`(this, 0, 12)).attachToRecyclerView(
-               `_$_findCachedViewById`(C0754R.C0757id.stdRecyclerView) as RecyclerView
-           )*/
+    private fun swipeToDelete(view: View) {
+
+        var deletedItem: StudentListClass?
+        ItemTouchHelper(object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                deletedItem = mListStd[position]
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        val builder = AlertDialog.Builder(activity as Context)
+                        builder.setTitle("Alert!!")
+                        builder.setMessage("Student Details with Past Attendance Records Will be Deleted. Do You Want To Delete")
+                        builder.setPositiveButton("Yes") { dialog, _ ->
+
+                            mDatabase?.mDao()?.deleteStudentFromStdList(mListStd[position].stdId)
+                            mDatabase?.mDao()?.deleteStudentFromStdDetails(mListStd[position].stdId)
+                            mDatabase?.mDao()
+                                ?.deleteStudentFromStdPastAttendance(mListStd[position].stdId)
+
+                            mListStd.remove(deletedItem)
+                            if (mListStd.isEmpty()) {
+                                view.rlNoStudents.visibility = View.VISIBLE
+                            }
+                            mAdapter?.notifyItemRemoved(position)
+                            dialog.dismiss()
+                        }
+                        builder.setNegativeButton("No") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        builder.setCancelable(false)
+                        builder.show()
+
+                    }
+                    ItemTouchHelper.RIGHT -> {
+                        val builder = AlertDialog.Builder(activity as Context)
+                        val dialogLayout =
+                            layoutInflater.inflate(R.layout.edit_stud_details_dialog, null)
+                        val etStudName = dialogLayout.etStudNameCustomDialog
+                        val etStudUsn = dialogLayout.etStudUsnCustomDialog
+                        val btnCancel = dialogLayout.btnCancelCustomDialog
+                        val btnEdit = dialogLayout.btnEditCustomDialog
+                        builder.setView(dialogLayout)
+
+                        etStudName.setText(mListStd[position].stdName)
+                        etStudUsn.setText(mListStd[position].stdUsn)
+
+                        val dialog = builder.create()
+                        btnCancel.setOnClickListener {
+                            mAdapter?.notifyDataSetChanged()
+                            dialog.dismiss()
+                        }
+                        btnEdit.setOnClickListener {
+
+                            val editedName: String = etStudName.text.toString()
+
+                            val editedUsn: String = etStudUsn.text.toString()
+
+
+                            mDatabase?.mDao()?.updateUSNStudentListsFromID(
+                                mListStd[position].stdId,
+                                editedUsn
+                            )
+
+                            mDatabase?.mDao()?.updateUSNStudentAttendanceHistory(
+                                mListStd[position].stdId,
+                                editedUsn
+                            )
+
+                            mDatabase?.mDao()?.updateUSNStudentDetails(
+                                mListStd[position].stdId,
+                                editedUsn
+                            )
+
+                            mDatabase?.mDao()?.updateNameStudentLists(
+                                mListStd[position].stdId,
+                                editedName
+                            )
+
+                            mDatabase?.mDao()?.updateNameStudentDetails(
+                                mListStd[position].stdId,
+                                editedName
+                            )
+
+                            mDatabase?.mDao()?.updateStudNameInStudPastAttend(
+                                mListStd[position].stdId,
+                                editedName
+                            )
+                            gettingDataFromDatabase(view)
+                            buildRecyclerView(view)
+                            dialog.dismiss()
+                        }
+                        dialog.setCancelable(false)
+                        dialog.show()
+                    }
+                }
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val builder: RecyclerViewSwipeDecorator.Builder =
+                    RecyclerViewSwipeDecorator.Builder(
+                        context,
+                        c,
+                        recyclerView,
+                        viewHolder,
+                        dX,
+                        dY,
+                        actionState,
+                        isCurrentlyActive
+                    )
+                builder.addSwipeLeftBackgroundColor(
+                    ContextCompat.getColor(
+                        activity as Context,
+                        R.color.lightRed
+                    )
+                )
+                builder.addSwipeRightBackgroundColor(
+                    ContextCompat.getColor(
+                        activity as Context,
+                        R.color.lightYellow
+                    )
+                ).addSwipeRightLabel("Edit").setSwipeLeftLabelTextSize(1, 16.0f)
+                    .addSwipeLeftLabel("Delete").setSwipeLeftLabelTextSize(1, 16.0f).create()
+                    .decorate()
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+
+
+            }
+
+        }).attachToRecyclerView(view.stdRecyclerView)
     }
 
 }

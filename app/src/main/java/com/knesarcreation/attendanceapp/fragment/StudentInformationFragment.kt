@@ -72,9 +72,11 @@ class StudentInformationFragment : Fragment(), AdapterAttendanceSheet.OnItemClic
             slideFromRight
         )
         view.mRecyclerView.startAnimation(layoutRightSlide)
-        view.mRecyclerView.setHasFixedSize(true)
 
+        view.mRecyclerView.setHasFixedSize(true)
         view.mRecyclerView.layoutManager = LinearLayoutManager(activity as Context)
+
+        /*getting data from database*/
         gettingDataFromDatabase()
         buildRecyclerView(view)
 

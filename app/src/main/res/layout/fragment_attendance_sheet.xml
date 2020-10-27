@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rlAttendanceSheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,6 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="5dp"
         android:src="@drawable/menu_icon" />
 
     <TextView
@@ -25,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/imgNavigateBtn"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/paytone_one"
         android:includeFontPadding="false"
         android:text="Attendance\nSheets"
@@ -36,9 +39,9 @@
         android:id="@+id/imgCreateSheet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginEnd="15dp"
         android:foreground="?attr/selectableItemBackground"
         android:padding="7dp"
         android:src="@drawable/add_icon" />
@@ -48,8 +51,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@+id/imgCreateSheet"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@+id/imgCreateSheet"
         android:foreground="?attr/selectableItemBackground"
         android:padding="7dp"
         android:src="@drawable/help_icon" />
@@ -58,7 +61,8 @@
         android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/txtTitleNameAttendSheet" />
+        android:layout_below="@+id/txtTitleNameAttendSheet"
+        tools:listitem="@layout/recycler_attendance_sheet_single_row" />
 
     <LinearLayout
         android:id="@+id/llNoAttendanceSheets"

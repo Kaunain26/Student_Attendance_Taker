@@ -67,7 +67,7 @@ class MainScreenActivity : AppCompatActivity() {
     private fun animateNavigationDrawer() {
         //Add any color or remove it to use the default one!
         //To make it transparent use Color.Transparent in side setScrimColor();
-        mDrawerLayout.setScrimColor(resources.getColor(R.color.lightBlue))
+        mDrawerLayout.setScrimColor(resources.getColor(R.color.lightPink))
 
         mDrawerLayout.addDrawerListener(object : SimpleDrawerListener() {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {

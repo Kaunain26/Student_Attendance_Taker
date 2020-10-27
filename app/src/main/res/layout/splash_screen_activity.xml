@@ -1,13 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/splash_screen_background">
+    android:layout_height="match_parent">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/app_logo" />
+        android:background="@drawable/splash_screen_background" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_above="@+id/logo_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/attendance_app_logo_icon" />
+
+    <TextView
+        android:id="@+id/logo_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/trade_winds"
+        android:text="Attendance app"
+        android:textColor="#fff"
+        android:textSize="35sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/slogan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo_text"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="serif-monospace"
+        android:text="MAKE ATTENDANCE DIGITALLY"
+        android:textColor="#fff"
+        android:textSize="13sp"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
