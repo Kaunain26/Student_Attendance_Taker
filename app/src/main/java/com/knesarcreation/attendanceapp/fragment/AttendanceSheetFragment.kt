@@ -138,7 +138,7 @@ class AttendanceSheetFragment : Fragment(), AdapterAttendanceSheet.OnItemClickLi
                                 ?.deleteAttendanceHistory(mAttendanceList[position].sheetNo)
                             mDatabase?.mDao()?.deleteStdDetails(mAttendanceList[position].sheetNo)
                             mDatabase?.mDao()
-                                ?.deleteAttendanceHistoryDateTimes(mAttendanceList[position].sheetNo)
+                                ?.deleteAttendanceHistoryDate(mAttendanceList[position].sheetNo)
 
                             mAttendanceList.remove(deletedSheet)
                             if (mAttendanceList.isEmpty()) {

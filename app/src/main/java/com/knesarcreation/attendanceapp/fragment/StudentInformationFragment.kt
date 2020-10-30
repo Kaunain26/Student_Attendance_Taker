@@ -39,6 +39,9 @@ class StudentInformationFragment : Fragment(), AdapterAttendanceSheet.OnItemClic
         val view: View = inflater.inflate(R.layout.fragment_attendance_sheet, container, false)
         (activity as AppCompatActivity).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
 
+        view.imgCreateSheet.visibility = View.INVISIBLE
+        view.imgHelp.visibility = View.INVISIBLE
+
         view.txtTitleNameAttendSheet.text = "Student\nInformations"
 
         /*setting background*/

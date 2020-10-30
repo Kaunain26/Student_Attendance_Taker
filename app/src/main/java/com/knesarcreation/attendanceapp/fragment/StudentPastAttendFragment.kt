@@ -117,9 +117,17 @@ class StudentPastAttendFragment : Fragment(), AdapterStdPastAttendance.OnItemCli
 
     private fun saveAttendanceBtn(view: View) {
         view.imgSaveBtnPastAttend?.setOnClickListener {
-            savePastAttendance()
-            openFragment(AttendDatesFragment())
-            Toast.makeText(activity as Context, "Saved", Toast.LENGTH_SHORT).show()
+            if (mStdPastList.isEmpty()) {
+                Toast.makeText(
+                    activity as Context,
+                    "No attendance history found!!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                savePastAttendance()
+                openFragment(AttendDatesFragment())
+                Toast.makeText(activity as Context, "Saved", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

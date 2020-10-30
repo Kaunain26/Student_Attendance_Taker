@@ -143,7 +143,12 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
         }
 
         view.imgSaveAttendance.setOnClickListener {
-            saveAttendance()
+            if (mListStd.isEmpty()) {
+                Toast.makeText(activity as Context, "No students found!!", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                saveAttendance()
+            }
         }
 
         view.imgArrowBack.setOnClickListener {
@@ -220,9 +225,6 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                     }
                 }
             }
-
-            val itemCount = mDatabase?.mDao()?.getItemCount(id)
-            Toast.makeText(activity as Context, "$itemCount", Toast.LENGTH_SHORT).show()
 
             /*After saving Attendance making checkbox unchecked*/
             for (k in mListStd) {
@@ -344,6 +346,13 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                 rlNoStudents.visibility = View.INVISIBLE
             }
             mDatabase?.mDao()?.insertStudentList(currentStud)
+
+            if (mListStd.isNotEmpty()) {
+                if (mListStd.isNotEmpty()) {
+                    view?.txtSelect?.visibility = View.VISIBLE
+                    view?.checkAll?.visibility = View.VISIBLE
+                }
+            }
         }
     }
 
@@ -370,6 +379,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                 val position = viewHolder.adapterPosition
                 deletedItem = mListStd[position]
                 when (direction) {
+                    /*deleting student details*/
                     ItemTouchHelper.LEFT -> {
                         val builder = AlertDialog.Builder(activity as Context)
                         builder.setTitle("Alert!!")
@@ -384,17 +394,23 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                             mListStd.remove(deletedItem)
                             if (mListStd.isEmpty()) {
                                 view.rlNoStudents.visibility = View.VISIBLE
+                                view.txtSelect?.visibility = View.INVISIBLE
+                                view.checkAll?.visibility = View.INVISIBLE
                             }
                             mAdapter?.notifyItemRemoved(position)
                             dialog.dismiss()
                         }
+
                         builder.setNegativeButton("No") { dialog, _ ->
+                            mAdapter?.notifyDataSetChanged()
                             dialog.dismiss()
                         }
                         builder.setCancelable(false)
                         builder.show()
 
                     }
+
+                    /*Editing student details*/
                     ItemTouchHelper.RIGHT -> {
                         val builder = AlertDialog.Builder(activity as Context)
                         val dialogLayout =
@@ -413,6 +429,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                             mAdapter?.notifyDataSetChanged()
                             dialog.dismiss()
                         }
+
                         btnEdit.setOnClickListener {
 
                             val editedName: String = etStudName.text.toString()
@@ -502,11 +519,7 @@ class StudentListFragment : Fragment(), AdapterStudentList.OnItemClickListener {
                     actionState,
                     isCurrentlyActive
                 )
-
-
             }
-
         }).attachToRecyclerView(view.stdRecyclerView)
     }
-
 }

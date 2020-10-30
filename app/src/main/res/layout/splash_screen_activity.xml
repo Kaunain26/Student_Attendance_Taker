@@ -4,9 +4,9 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/splash_screen_background" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/dark_blue_backgound" />
 
     <ImageView
         android:id="@+id/logo"
@@ -36,7 +36,7 @@
         android:layout_centerHorizontal="true"
         android:fontFamily="serif-monospace"
         android:text="MAKE ATTENDANCE DIGITALLY"
-        android:textColor="#fff"
+        android:textColor="#FDD835"
         android:textSize="13sp"
         android:textStyle="bold" />
 

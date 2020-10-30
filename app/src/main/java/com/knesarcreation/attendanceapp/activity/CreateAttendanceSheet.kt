@@ -16,6 +16,7 @@ class CreateAttendanceSheet : AppCompatActivity() {
         const val EXTRA_SUB_NAME = "com.knesarcreation.attendanceapp_EXTRA_SUB_NAME"
     }
 
+    private var studClassYear: String? = ""
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_attendance_sheet)
@@ -25,6 +26,7 @@ class CreateAttendanceSheet : AppCompatActivity() {
             etSubjectName.setText(intent?.getStringExtra(EXTRA_SUB_NAME))
             etSubjectCode.setText(intent?.getStringExtra(EXTRA_SUB_CODE))
             etLectureName.setText(intent?.getStringExtra(EXTRA_PROF_NAME))
+            studClassYear = intent?.getStringExtra(EXTRA_CLASS_YEAR)
         } else {
             txtTitleNameCreateAttendSheet.text = "Create Attendance Sheet"
         }
@@ -33,8 +35,16 @@ class CreateAttendanceSheet : AppCompatActivity() {
             android.R.layout.simple_spinner_item,
             arrayOf("First Year", "Second Year", "Third Year", "Fourth Year")
         )
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         mSpinner.adapter = arrayAdapter
+
+        /*this is only when this activity opened for editing the Attendance sheet*/
+        for (i in 0 until 4) {
+            val itemAtPosition = mSpinner.getItemAtPosition(i)
+            if (itemAtPosition == studClassYear) {
+                mSpinner.setSelection(i)
+            }
+        }
 
         imgSaveBtn.setOnClickListener {
             val profName = etLectureName.text.toString()

@@ -32,7 +32,7 @@ interface Dao {
     fun deleteAttendanceHistory(hisId: Int)
 
     @Query("DELETE FROM AttendanceDateTimes WHERE attendHisId =:hisID")
-    fun deleteAttendanceHistoryDateTimes(hisID: Int)
+    fun deleteAttendanceHistoryDate(hisID: Int)
 
     @Query("DELETE FROM StudentDetails WHERE sheetNo = :sheetNo")
     fun deleteStdDetails(sheetNo: Int)
@@ -45,6 +45,9 @@ interface Dao {
 
     @Query("DELETE FROM StudentListClass WHERE stdId= :stdId")
     fun deleteStudentFromStdList(stdId: Int)
+
+    @Query("DELETE FROM AttendanceDateTimes WHERE id =:id")
+    fun deleteSingleAttendanceHistoryDate(id: Int)
 
     @Query("UPDATE AttendanceHistory SET  subName = :subName , subCode = :subCode ,  profName =:profName , classYear = :classYear WHERE hisID=:hisId ")
     fun editAttendanceHistory(

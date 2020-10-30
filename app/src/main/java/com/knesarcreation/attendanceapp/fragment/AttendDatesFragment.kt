@@ -50,6 +50,7 @@ class AttendDatesFragment : Fragment() {
         sharedTransition = SharedTransition(activity as Context)
 
         setDB()
+
         if (arguments != null) {
             hisID = arguments?.getInt("hisId", 0)
             subName = arguments?.getString("subName")
@@ -78,17 +79,28 @@ class AttendDatesFragment : Fragment() {
         view.mRecyclerViewAttendHistoryDatesTimes.startAnimation(layoutRightSlide)
 
         try {
+            /*here we are delete redundant history dates that doesn't contain students*/
             for (i in mDatabase?.mDao()?.getHistoryAndDatesTimes(hisID!!)!!) {
-                mStdHistoryList = i.attendanceDateTimes
+                for (j in i.attendanceDateTimes) {
+                    /*getting count of total num of students from id of AttendanceDatesTime */
+                    val itemCount = mDatabase?.mDao()?.getItemCount(j.id)
+                    if (itemCount == 0) {
+                        /*if total students is zero inside that AttendanceDatesTime so delete it*/
+                        mDatabase?.mDao()?.deleteSingleAttendanceHistoryDate(j.id)
+                    }
+                }
             }
         } catch (e: NullPointerException) {
             e.printStackTrace()
         }
 
+        gettingDataFromDatabase()
+
+        buildRecyclerView(view)
+
         if (mStdHistoryList.isNotEmpty()) {
             view.rlNoHistoryAttend.visibility = View.INVISIBLE
         }
-        buildRecyclerView(view)
 
         /*going back to HistoryFragment*/
         view.imgArrowBackHistoryDates.setOnClickListener {
@@ -101,8 +113,14 @@ class AttendDatesFragment : Fragment() {
                     ?.replace(R.id.fragment_container, it1)?.commit()
             }
         }
-
         return view
+    }
+
+    private fun gettingDataFromDatabase() {
+        for (i in mDatabase?.mDao()?.getHistoryAndDatesTimes(hisID!!)!!) {
+            /*assigining all data from database to list*/
+            mStdHistoryList = i.attendanceDateTimes
+        }
     }
 
     private fun buildRecyclerView(view: View) {
@@ -142,5 +160,4 @@ class AttendDatesFragment : Fragment() {
     private fun setDB() {
         mDatabase = DatabaseInstance().newInstance(activity as Context)
     }
-
 }
